@@ -43,10 +43,56 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/apollo',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa'
   ],
+  /*
+  ** Apollo module configuration
+  ** See https://github.com/nuxt-community/apollo-module
+  */
+ apollo: {
+    cookieAttributes: {
+      /**
+        * Define when the cookie will be removed. Value can be a Number
+        * which will be interpreted as days from time of creation or a
+        * Date instance. If omitted, the cookie becomes a session cookie.
+        */
+      expires: 7, // optional, default: 7 (days)
+
+      /**
+        * Define the path where the cookie is available. Defaults to '/'
+        */
+      path: '/', // optional
+      /**
+        * Define the domain where the cookie is available. Defaults to
+        * the domain of the page where the cookie was created.
+        */
+      domain: 'example.com', // optional
+
+      /**
+        * A Boolean indicating if the cookie transmission requires a
+        * secure protocol (https). Defaults to false.
+        */
+      secure: false,
+    },
+    includeNodeModules: true,
+    authenticationType: 'Basic', // optional, default: 'Bearer'
+
+    defaultOptions: {
+      $query: {
+        loadingKey: 'loading',
+        fetchPolicy: 'cache-and-network',
+      },
+    },
+    // optional
+    errorHandler: '~/plugins/apollo-error-handler.js',
+    // required
+    clientConfigs: {
+      default: '~/plugins/apollo-config.js'
+    }
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
@@ -60,7 +106,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
