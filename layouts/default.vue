@@ -2,9 +2,9 @@
   <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
       :clipped="clipped"
       fixed
+      temporary
       app
     >
       <v-list>
@@ -61,6 +61,11 @@ export default {
           to: '/'
         },
         {
+          icon: 'mdi-weather-partly-cloudy',
+          title: 'Väder',
+          to: '/vader'
+        },
+        {
           icon: 'mdi-snowflake',
           title: 'Snödjup',
           to: '/snodjup'
@@ -71,7 +76,6 @@ export default {
           to: '/felrapport'
         }
       ],
-      miniVariant: false,
       right: true,
       rightDrawer: false,
       title: 'IoT för Tillgänglighet'

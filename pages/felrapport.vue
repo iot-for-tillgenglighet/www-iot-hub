@@ -1,6 +1,5 @@
 <template>
   <v-layout
-    column
     justify-center
     align-center
   >
@@ -9,7 +8,9 @@
       sm8
       md6
     >
-      <v-card>
+      <v-card
+        outlined
+      >
         <v-card-title class="headline">
           Felrapportering
         </v-card-title>
