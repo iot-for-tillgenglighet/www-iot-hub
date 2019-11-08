@@ -30,7 +30,11 @@
       app
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
+      <v-btn
+        text
+        :to="to"
+        v-text="title"
+      />
       <v-spacer />
     </v-app-bar>
     <v-content>
@@ -78,7 +82,8 @@ export default {
       ],
       right: true,
       rightDrawer: false,
-      title: 'IoT för Tillgänglighet'
+      title: 'IoT för Tillgänglighet',
+      to: '/'
     }
   }
 }
