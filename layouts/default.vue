@@ -35,7 +35,6 @@
         :to="to"
         v-text="title"
       />
-      <v-spacer />
     </v-app-bar>
     <v-content>
       <v-container>
@@ -82,7 +81,7 @@ export default {
       ],
       right: true,
       rightDrawer: false,
-      title: 'IoT för Tillgänglighet',
+      title: 'IoT FÖR TILLGÄNGLIGHET',
       to: '/'
     }
   }

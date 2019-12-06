@@ -1,6 +1,5 @@
 <template>
-  <v-card
-    outlined
+  <v-container
     class="mx-auto text-center"
   >
     <v-card-title
@@ -36,7 +35,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-card>
+  </v-container>
 </template>
 
 <script>
