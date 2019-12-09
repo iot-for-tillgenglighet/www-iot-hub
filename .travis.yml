@@ -8,5 +8,5 @@ before_install:
 - export PATH="$HOME/.yarn/bin:$PATH"
 - echo "$DOCKER_PASSWORD" | docker login docker.pkg.github.com -u "$DOCKER_USERNAME" --password-stdin
 - docker build -f ./Dockerfile -t github.com/iot-for-tillgenglighet/www-iot-hub .
-- docker tag github.com/iot-for-tillgenglighet/www-iot-hub docker.pkg.github.com/iot-for-tillgenglighet/www-iot-hub:prod-$TRAVIS_COMMIT
-- docker push docker.pkg.github.com/iot-for-tillgenglighet/www-iot-hub:prod-$TRAVIS_COMMIT
+- docker tag github.com/iot-for-tillgenglighet/www-iot-hub docker.pkg.github.com/iot-for-tillgenglighet/www-iot-hub/www-iot-hub:prod-$TRAVIS_COMMIT
+- docker push docker.pkg.github.com/iot-for-tillgenglighet/www-iot-hub/www-iot-hub:prod-$TRAVIS_COMMIT
