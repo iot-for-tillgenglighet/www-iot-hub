@@ -1,0 +1,4 @@
+# Do not send these directories as build context to Docker
+.git
+.nuxt
+node_modules
