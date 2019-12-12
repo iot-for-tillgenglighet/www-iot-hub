@@ -31,9 +31,9 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn
-        text
         :to="to"
         v-text="title"
+        text
       />
     </v-app-bar>
     <v-content>

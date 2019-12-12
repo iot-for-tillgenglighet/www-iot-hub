@@ -18,10 +18,10 @@
           :cols="card.flex"
         >
           <v-card
+            :to="card.to"
             class="white--text"
             router
             exact
-            :to="card.to"
           >
             <v-img
               :src="card.src"

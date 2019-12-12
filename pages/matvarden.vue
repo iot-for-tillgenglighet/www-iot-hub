@@ -3,12 +3,12 @@
     align-center
     justify-center
   >
-    <v-btn text color="blue" :to="'/'" v-text="'Hem'" />
-    <v-btn text color="blue" :to="'/snodjup'" v-text="'Snödjup Översikt'" />
+    <v-btn :to="'/'" v-text="'Hem'" color="blue" text />
+    <v-btn :to="'/snodjup'" v-text="'Snödjup Översikt'" color="blue" text />
     <NuxtLink :to="'/matvarden'" />
-    <div class="mat" v-html="stuff" />
+    <div v-html="stuff" class="mat" />
     <br>
-    <v-btn text color="blue" :to="'/nyamatvarden'" v-text="'Lägg till mätvärden'" />
+    <v-btn :to="'/nyamatvarden'" v-text="'Lägg till mätvärden'" color="blue" text />
   </v-container>
 </template>
 
@@ -17,7 +17,7 @@ import axios from 'axios'
 
 export default {
   async asyncData () {
-    const { data } = await axios.get('http://labiotsundsvall.northeurope.cloudapp.azure.com/fetchdata')
+    const { data } = await axios.get('http://localhost:8880/fetchdata')
     return { stuff: data }
   }
 }

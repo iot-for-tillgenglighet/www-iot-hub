@@ -18,13 +18,13 @@
           :cols="card.flex"
         >
           <v-card
+            :to="card.to"
             color="blue"
             class="white--text"
             router
             exact
-            :to="card.to"
           >
-            <v-card-title class="justify-center" v-text="card.title" />
+            <v-card-title v-text="card.title" class="justify-center" />
           </v-card>
         </v-col>
       </v-row>
