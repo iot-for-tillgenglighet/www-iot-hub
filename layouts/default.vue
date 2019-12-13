@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       :clipped="clipped"
@@ -24,18 +24,20 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        :to="to"
-        v-text="title"
-        text
-      />
-    </v-app-bar>
+    <client-only>
+      <v-app-bar
+        :clipped-left="clipped"
+        fixed
+        app
+      >
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+        <v-btn
+          :to="to"
+          v-text="title"
+          text
+        />
+      </v-app-bar>
+    </client-only>
     <v-content>
       <v-container>
         <nuxt />

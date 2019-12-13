@@ -1,61 +1,63 @@
 <template>
-  <v-layout
-    justify-center
-    align-center
-  >
-    <v-flex
-      xs12
-      sm8
-      md6
+  <client-only>
+    <v-layout
+      justify-center
+      align-center
     >
-      <v-card
-        outlined
+      <v-flex
+        xs12
+        sm8
+        md6
       >
-        <v-card-title class="headline">
-          Felrapportering
-        </v-card-title>
-        <v-card-text>
-          <p>Use this form to report an issue.</p>
-        </v-card-text>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
+        <v-card
+          outlined
         >
-          <v-text-field
-            v-model="name"
-            :counter="100"
-            :rules="nameRules"
-            label="Name"
-            outlined
-            required
-          />
-          <v-text-field
-            v-model="email"
-            :counter="100"
-            :rules="emailRules"
-            label="Email"
-            outlined
-            required
-          />
-          <v-textarea
-            v-model="fel"
-            :counter="500"
-            :rules="felRules"
-            label="Fel"
-            outlined
-            required
-          />
-          <v-btn
-            class="white--text"
-            color="blue"
+          <v-card-title class="headline">
+            Felrapportering
+          </v-card-title>
+          <v-card-text>
+            Use this form to report an issue.
+          </v-card-text>
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
           >
-            Submit
-          </v-btn>
-        </v-form>
-      </v-card>
-    </v-flex>
-  </v-layout>
+            <v-text-field
+              v-model="name"
+              :counter="100"
+              :rules="nameRules"
+              label="Name"
+              outlined
+              required
+            />
+            <v-text-field
+              v-model="email"
+              :counter="100"
+              :rules="emailRules"
+              label="Email"
+              outlined
+              required
+            />
+            <v-textarea
+              v-model="fel"
+              :counter="500"
+              :rules="felRules"
+              label="Fel"
+              outlined
+              required
+            />
+            <v-btn
+              class="white--text"
+              color="blue"
+            >
+              Submit
+            </v-btn>
+          </v-form>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </client-only>
 </template>
 
 <script>
