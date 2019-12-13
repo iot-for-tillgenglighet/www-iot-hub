@@ -18,7 +18,7 @@ import axios from 'axios'
 
 export default {
   async asyncData () {
-    const { data } = await axios.get('http://iotsundsvall.northeurope.cloudapp.azure.com/counter')
+    const { data } = await axios.get('http://iotsundsvall.northeurope.cloudapp.azure.com/snowdepth/counter')
     return { stuff: data }
   }
 }
