@@ -3,11 +3,9 @@
     <v-container
       class="mx-auto text-center"
     >
-      <v-card-title
-        class="headline justify-center"
-      >
+      <h1>
         Välkommen till IoT för Tillgänglighet
-      </v-card-title>
+      </h1>
       <v-card-text>Här kan du hitta info om väder och snödjup och lite annat, samt göra en felrapport om något inte är som det ska vara.</v-card-text>
       <v-container
         fluid

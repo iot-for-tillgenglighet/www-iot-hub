@@ -5,16 +5,21 @@
     >
       <v-btn :to="'/'" v-text="'Hem'" color="blue" text />
       <v-btn :to="'/snodjup'" v-text="'Snödjup Översikt'" color="blue" text />
-      <h1>tidigare mätvärden</h1>
-      <p>Nedan listas tidigare registrerade mätvärden gjorda av dig.</p>
-      <v-data-table
-        :headers="headers"
-      />
+      <NuxtLink :to="'/matvarden'" />
+      <div v-html="stuff" />
+      <br>
       <v-btn :to="'/nyamatvarden'" v-text="'Lägg till mätvärden'" color="blue" text />
     </v-container>
   </client-only>
 </template>
 
 <script>
+import axios from 'axios'
 
+export default {
+  async asyncData () {
+    const { data } = await axios.get('http://iotsundsvall.northeurope.cloudapp.azure.com/snowdepth/fetchdata')
+    return { stuff: data }
+  }
+}
 </script>

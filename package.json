@@ -17,7 +17,9 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/pwa": "^3.0.0-0",
     "graphql-tag": "^2.10.1",
-    "nuxt": "^2.0.0"
+    "leaflet": "^1.6.0",
+    "nuxt": "^2.0.0",
+    "nuxt-leaflet": "^0.0.19"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^1.0.1",

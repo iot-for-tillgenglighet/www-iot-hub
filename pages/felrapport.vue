@@ -10,14 +10,14 @@
         md6
       >
         <v-card
-          outlined
+          elevation="0"
         >
-          <v-card-title class="headline">
+          <h1>
             Felrapportering
-          </v-card-title>
-          <v-card-text>
+          </h1>
+          <p>
             Use this form to report an issue.
-          </v-card-text>
+          </p>
           <v-form
             ref="form"
             v-model="valid"
