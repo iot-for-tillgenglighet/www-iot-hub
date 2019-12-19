@@ -2,9 +2,8 @@
   <v-container>
     <div id="map-wrap" style="height: 100vh">
       <client-only>
-        <l-map :zoom="13" :center="[47.413220, -1.219482]">
+        <l-map>
           <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
-          <l-marker :lat-lng="[47.413220, -1.219482]"></l-marker>
         </l-map>
       </client-only>
     </div>
@@ -24,9 +23,28 @@
 
 export default {
   mounted () {
+    const L = this.$L
+    const mymap = this.$L.map('map-wrap')
 
+    function onLocationFound (e) {
+      const radius = e.accuracy
+      console.log(e)
+
+      L.marker(e.latlng).addTo(mymap)
+        .bindPopup('You are within ' + radius + ' meters from this point').openPopup()
+
+      L.circle(e.latlng, radius).addTo(mymap)
+      console.log('locationfound')
+    }
+
+    mymap.on('locationfound', onLocationFound)
+
+    mymap.locate({ setView: true, watch: true, enableHighAccuracy: true })
+    console.log(mymap)
+    console.log(this.$L)
   }
 }
+
 </script>
 
 <style>
