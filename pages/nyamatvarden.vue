@@ -26,7 +26,7 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-btn @click="persist" color="blue" text>
+    <v-btn color="blue" text>
       Spara
     </v-btn>
   </v-container>
@@ -36,7 +36,7 @@
 export default {
   data () {
     return {
-      center: [51.505, -0.09],
+      center: [37.14, 115.483],
       radius: 0,
       min: 0,
       max: 100,
@@ -57,19 +57,6 @@ export default {
     mymap.on('locationfound', onLocationFound)
 
     mymap.locate({ setView: true, watch: true, enableHighAccuracy: true })
-
-    if (localStorage.slider) {
-      this.slider = localStorage.slider
-    }
-    if (localStorage.component) {
-      this.component = localStorage.component
-    }
-  },
-  methods: {
-    persist () {
-      localStorage.slider = this.slider
-      localStorage.component = this.component
-    }
   }
 }
 </script>
