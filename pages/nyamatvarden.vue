@@ -5,7 +5,7 @@
     <div id="map-wrap" class="mx-auto text-center">
       <client-only>
         <l-map :zoom="13" :center="center">
-          <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+          <l-tile-layer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png" />
           <l-marker :lat-lng="center" />
           <l-circle :lat-lng="center" :radius="radius" />
         </l-map>
