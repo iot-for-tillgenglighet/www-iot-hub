@@ -10,3 +10,12 @@ tbody {
 h1 {
   font-variant: all-small-caps;
 }
+header.v-app-bar.v-app-bar--fixed {
+  z-index: 9000;
+}
+footer.v-footer--fixed {
+  z-index: 9000;
+}
+nav.v-navigation-drawer--temporary:not(.v-navigation-drawer--close) {
+  z-index: 9500;
+}

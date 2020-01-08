@@ -79,10 +79,6 @@ export default {
           icon: 'mdi-alert-outline',
           title: 'Felrapportering',
           to: '/felrapport'
-        },
-        {
-          title: 'snowdepth',
-          to: '/snowdepth'
         }
       ],
       right: true,

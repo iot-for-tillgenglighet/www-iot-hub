@@ -16,5 +16,32 @@
 </template>
 
 <script>
-
+export default {
+  data () {
+    return {
+      headers: [
+        {
+          text: 'Plats',
+          align: 'center',
+          value: 'latlang'
+        },
+        {
+          text: 'Snödjup',
+          align: 'center',
+          value: 'slider'
+        },
+        {
+          text: 'Datum',
+          align: 'center',
+          value: 'date'
+        },
+        {
+          text: 'Tid',
+          align: 'center',
+          value: 'time'
+        }
+      ]
+    }
+  }
+}
 </script>
