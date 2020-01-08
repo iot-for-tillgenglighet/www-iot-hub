@@ -1,77 +1,82 @@
 <template>
-  <client-only>
-    <v-container
-      class="mx-auto text-center"
-    >
-      <v-btn :to="'/'" v-text="'Hem'" color="blue" text />
-      <v-btn :to="'/snodjup'" v-text="'Snödjup Översikt'" color="blue" text />
-      <h1>Lägg till nya mätvärden</h1>
-      <v-card
-        elevation="0"
-      >
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
-          <v-text-field
-            v-model="snowdepth"
-            :counter="100"
-            :rules="snowdepthRules"
-            type="number"
-            label="Snödjup (mm)"
-            outlined
-            required
+  <v-container
+    class="mx-auto text-center"
+  >
+    <div id="map-wrap" class="mx-auto text-center">
+      <client-only>
+        <l-map :zoom="13" :center="center">
+          <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+          <l-marker :lat-lng="center" />
+          <l-circle :lat-lng="center" :radius="radius" />
+        </l-map>
+      </client-only>
+    </div>
+    <br>
+    <v-card-text>
+      <v-row>
+        <v-col class="pr-4">
+          <v-slider
+            v-model="slider"
+            :max="max"
+            :min="min"
+            thumb-label="always"
+            class="align-center"
+            hide-details
           />
-          <v-text-field
-            v-model="temperature"
-            :counter="100"
-            :rules="temperatureRules"
-            type="number"
-            label="Temperatur (°C)"
-            outlined
-            required
-          />
-          <v-textarea
-            v-model="comment"
-            :counter="500"
-            :rules="commentRules"
-            label="Kommentar"
-            outlined
-            required
-          />
-          <v-btn
-            class="white--text"
-            color="blue"
-          >
-            Submit
-          </v-btn>
-        </v-form>
-      </v-card>
-      <v-btn :to="'/matvarden'" v-text="'Tidigare mätvärden'" color="blue" text />
-    </v-container>
-  </client-only>
+        </v-col>
+      </v-row>
+    </v-card-text>
+    <v-btn @click="persist" color="blue" text>
+      Spara
+    </v-btn>
+  </v-container>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    valid: true,
-    snowdepth: '',
-    snowdepthRules: [
-      v => !!v || 'Snowdepth is required',
-      v => (v && v.length <= 100) || 'Name must be less than 100 characters'
-    ],
-    temperature: '',
-    temperatureRules: [
-      v => !!v || 'Temperature is required',
-      v => (v && v.length <= 100) || 'Email must be less than 100 characters'
-    ],
-    comment: '',
-    commentRules: [
-      v => !!v || 'Comment is required',
-      v => (v && v.length <= 500) || 'Text must be less than 500 characters'
-    ]
-  })
+  data () {
+    return {
+      center: [51.505, -0.09],
+      radius: 0,
+      min: 0,
+      max: 100,
+      slider: 0,
+      range: [0, 100]
+    }
+  },
+  mounted () {
+    const L = this.$L
+    const mymap = L.map('map-wrap')
+
+    const component = this
+
+    function onLocationFound (e) {
+      component.center = e.latlng
+      component.radius = e.accuracy
+    }
+    mymap.on('locationfound', onLocationFound)
+
+    mymap.locate({ setView: true, watch: true, enableHighAccuracy: true })
+
+    if (localStorage.slider) {
+      this.slider = localStorage.slider
+    }
+    if (localStorage.component) {
+      this.component = localStorage.component
+    }
+  },
+  methods: {
+    persist () {
+      localStorage.slider = this.slider
+      localStorage.component = this.component
+    }
+  }
 }
 </script>
+
+<style>
+div.leaflet-container {
+  height: 1000px;
+  width: 1000px;
+}
+</style>
