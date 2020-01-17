@@ -12,6 +12,4 @@ module.exports = {
     'plugin:nuxt/recommended'
   ],
   // add your custom rules here
-  rules: {
-  }
 }
