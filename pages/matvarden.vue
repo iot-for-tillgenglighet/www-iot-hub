@@ -23,22 +23,17 @@ export default {
         {
           text: 'Plats',
           align: 'center',
-          value: 'latlang'
+          value: 'pos'
         },
         {
           text: 'Snödjup',
           align: 'center',
-          value: 'slider'
+          value: 'depth'
         },
         {
           text: 'Datum',
           align: 'center',
-          value: 'date'
-        },
-        {
-          text: 'Tid',
-          align: 'center',
-          value: 'time'
+          value: 'when'
         }
       ]
     }
