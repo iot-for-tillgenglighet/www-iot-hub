@@ -11,23 +11,48 @@
         </l-map>
       </client-only>
     </div>
-    <br>
-    <v-card-text>
+    <v-card-text class="mx-auto align-center">
       <v-row>
-        <v-col class="pr-4">
-          <v-slider
-            v-model="slider"
-            :max="max"
-            :min="min"
-            type="range"
-            thumb-label="always"
-            class="align-center"
-            hide-details
-          />
-        </v-col>
-        <v-btn @click="sendData" color="blue" text>
+        <v-subheader>Snödjup i millimeter</v-subheader>
+      </v-row>
+      <v-row>
+        <v-slider
+          v-model="slider"
+          :max="max"
+          :min="min"
+          type="range"
+          thumb-label="always"
+          class="align-center"
+          hide-details
+        />
+        <v-btn
+          @click="sendData"
+          color="blue"
+          text
+          outlined
+        >
           Spara
         </v-btn>
+      </v-row>
+      <v-row>
+        <v-alert
+          v-model="successAlert"
+          dense
+          outlined
+          type="success"
+          dismissible
+        >
+          Nytt mätvärde sparat.
+        </v-alert>
+        <v-alert
+          v-model="errorAlert"
+          dense
+          outlined
+          type="error"
+          dismissible
+        >
+          Kunde inte spara nytt mätvärde.
+        </v-alert>
       </v-row>
     </v-card-text>
   </v-container>
@@ -45,8 +70,10 @@ export default {
       max: 100,
       slider: '',
       range: [0, 100],
-      posLat: 0.0,
-      posLon: 0.0
+      posLat: 0,
+      posLon: 0,
+      successAlert: false,
+      errorAlert: false
     }
   },
   mounted () {
@@ -69,7 +96,6 @@ export default {
   methods: {
     sendData () {
       const component = this
-      console.log(component)
       axios({
         method: 'POST',
         url: 'https://iotsundsvall.northeurope.cloudapp.azure.com/api/graphql',
@@ -94,7 +120,7 @@ export default {
                 'lon': component.posLon,
                 'lat': component.posLat
               },
-              'depth': 0.0
+              'depth': component.slider
             }
           }
         },
@@ -102,8 +128,10 @@ export default {
       }).then(
         (result) => {
           console.log(result.data)
+          component.successAlert = true
         }, (error) => {
           console.error(error)
+          component.errorAlert = true
         }
       )
     }
