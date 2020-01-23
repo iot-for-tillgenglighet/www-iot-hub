@@ -4,81 +4,79 @@
       justify-center
       align-center
     >
-      <v-flex
-        xs12
-        sm8
-        md6
+      <v-container
+        fluid
+        elevation="0"
+        class="text-center"
       >
-        <v-card
-          elevation="0"
-        >
-          <h1>
-            Felrapportering
-          </h1>
-          <p>
-            Use this form to report an issue.
-          </p>
-          <v-form
-            ref="form"
-            v-model="valid"
-            lazy-validation
+        <h1>
+          Felrapportering
+        </h1>
+        <p>
+          Välj vilken typ av fel du vill rapportera.
+        </p>
+        <v-row dense>
+          <v-col
+            v-for="card in cards"
+            :key="card.title"
+            :cols="card.flex"
           >
-            <v-text-field
-              v-model="name"
-              :counter="100"
-              :rules="nameRules"
-              label="Name"
-              outlined
-              required
-            />
-            <v-text-field
-              v-model="email"
-              :counter="100"
-              :rules="emailRules"
-              label="Email"
-              outlined
-              required
-            />
-            <v-textarea
-              v-model="fel"
-              :counter="500"
-              :rules="felRules"
-              label="Fel"
-              outlined
-              required
-            />
-            <v-btn
-              class="white--text"
-              color="blue"
+            <v-card
+              @click="sendFel1"
+              v-bind="card.style"
+              class="justify-center"
             >
-              Submit
-            </v-btn>
-          </v-form>
-        </v-card>
-      </v-flex>
+              <v-card-title
+                v-text="card.title"
+                primary-title
+                class="justify-center white--text"
+              />
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-layout>
   </client-only>
 </template>
 
 <script>
+
 export default {
   data: () => ({
-    valid: true,
-    name: '',
-    nameRules: [
-      v => !!v || 'Name is required',
-      v => (v && v.length <= 100) || 'Name must be less than 100 characters'
-    ],
-    email: '',
-    emailRules: [
-      v => !!v || 'Email is required',
-      v => (v && v.length <= 100) || 'Email must be less than 100 characters'
-    ],
-    fel: '',
-    felRules: [
-      v => !!v || 'Text is required',
-      v => (v && v.length <= 100) || 'Text must be less than 500 characters'
+    cards: [
+      {
+        title: 'Snöröjning',
+        flex: 12,
+        style: {
+          color: 'blue lighten-2'
+        }
+      },
+      {
+        title: 'Halka',
+        flex: 12,
+        style: {
+          color: 'blue'
+        }
+      },
+      {
+        title: 'Something',
+        flex: 12,
+        style: {
+          color: 'blue darken-2'
+        }
+      }
     ]
-  })
+  }),
+  methods: {
+    sendFel1 () {
+      console.log('Snöröjning')
+    },
+    sendFel2 () {
+      console.log('Halka')
+    },
+    sendFel3 () {
+      console.log('Something...')
+    }
+  }
 }
 </script>
