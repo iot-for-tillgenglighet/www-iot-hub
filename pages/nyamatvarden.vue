@@ -13,7 +13,7 @@
     </div>
     <v-card-text class="mx-auto align-center">
       <v-row>
-        <v-subheader>Snödjup i millimeter</v-subheader>
+        <v-subheader>Snödjup i centimeter</v-subheader>
       </v-row>
       <v-row>
         <v-slider
@@ -54,6 +54,7 @@
           Kunde inte spara nytt mätvärde.
         </v-alert>
       </v-row>
+      <br>
     </v-card-text>
   </v-container>
 </template>
@@ -67,9 +68,9 @@ export default {
       center: [37.14, 115.483],
       radius: 0,
       min: 0,
-      max: 100,
+      max: 200,
       slider: '',
-      range: [0, 100],
+      range: [0, 200],
       posLat: 0,
       posLon: 0,
       successAlert: false,
