@@ -1,42 +1,39 @@
 <template>
-  <client-only>
-    <v-container
-      class="mx-auto text-center"
-    >
-      <v-btn :to="'/'" v-text="'Hem'" color="blue" text />
-      <v-btn :to="'/snodjup'" v-text="'Snödjup Översikt'" color="blue" text />
-      <h1>tidigare mätvärden</h1>
-      <p>Nedan listas tidigare registrerade mätvärden gjorda av dig.</p>
-      <v-data-table
-        :headers="headers"
-      />
-      <v-btn :to="'/nyamatvarden'" v-text="'Lägg till mätvärden'" color="blue" text />
-    </v-container>
-  </client-only>
+  <v-container>
+    <div id="map" class="mx-auto text-center">
+      <client-only>
+        <l-map :zoom="13" :center="center" style="height: 80vh; width: 80vw;">
+          <l-tile-layer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+          <l-marker :lat-lng="center" />
+          <l-circle :lat-lng="center" :radius="radius" />
+        </l-map>
+      </client-only>
+    </div>
+  </v-container>
 </template>
 
 <script>
 export default {
   data () {
     return {
-      headers: [
-        {
-          text: 'Plats',
-          align: 'center',
-          value: 'pos'
-        },
-        {
-          text: 'Snödjup',
-          align: 'center',
-          value: 'depth'
-        },
-        {
-          text: 'Datum',
-          align: 'center',
-          value: 'when'
-        }
-      ]
+      center: [62.3908, 17.3069],
+      radius: 0
     }
+  },
+  mounted () {
+    const L = this.$L
+    const component = this
+
+    const mymap = L.map('map')
+
+    function onLocationFound (e) {
+      component.center = e.latlng
+      component.radius = e.accuracy
+    }
+
+    mymap.on('locationfound', onLocationFound)
+
+    mymap.locate({ setView: true, watch: true, enableHighAccuracy: true })
   }
 }
 </script>
