@@ -6,8 +6,6 @@
           <l-tile-layer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png" />
           <l-marker :lat-lng="center" />
           <l-circle :lat-lng="center" :radius="radius" />
-          <l-marker :lat-lng="[62.398659, 17.341804]" />
-          <l-marker :lat-lng="[62.379448, 17.345182]" />
         </l-map>
       </client-only>
     </div>
@@ -37,6 +35,7 @@ export default {
     mymap.on('locationfound', onLocationFound)
 
     mymap.locate({ setView: true, watch: true, enableHighAccuracy: true })
+
   }
 }
 </script>
