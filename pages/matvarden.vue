@@ -35,7 +35,6 @@ export default {
     mymap.on('locationfound', onLocationFound)
 
     mymap.locate({ setView: true, watch: true, enableHighAccuracy: true })
-
   }
 }
 </script>
