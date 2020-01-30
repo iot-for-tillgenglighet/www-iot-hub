@@ -21,7 +21,7 @@ export default {
     }
   },
   mounted () {
-    const L = this.$L
+    const L = this.$Ls
     const mymap = L.map('map')
 
     const component = this
@@ -29,7 +29,6 @@ export default {
     function onLocationFound (e) {
       component.center = e.latlng
       component.radius = e.accuracy
-      console.log('hej')
     }
 
     mymap.on('locationfound', onLocationFound)
