@@ -21,10 +21,10 @@ export default {
     }
   },
   mounted () {
-    const L = this.$Ls
-    const mymap = L.map('map')
-
+    const L = this.$L
     const component = this
+
+    const mymap = L.map('map')
 
     function onLocationFound (e) {
       component.center = e.latlng
