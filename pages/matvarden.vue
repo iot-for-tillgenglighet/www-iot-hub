@@ -27,19 +27,21 @@ export default {
       component.center = e.latlng
       component.radius = e.accuracy
     }
+
     axios({
       method: 'GET',
-      url: 'http://localhost:8282/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth}}'
+      url: 'https://iotsundsvall.northeurope.cloudapp.azure.com/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth}}'
     }).then(
       (result) => {
-        const results = [result.data.data.snowdepths]
-
+        const results = result.data.data.snowdepths
         for (let i = 0; i < results.length; i++) {
+          const marker = { lat: results[i].from.pos.lat, lon: results[i].from.pos.lon }
+          console.log(marker)
           console.log(results[i])
+          L.marker(marker).addTo(newmap)
         }
       }
     )
   }
 }
-
 </script>
