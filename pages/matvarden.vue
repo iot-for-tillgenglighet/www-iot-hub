@@ -36,8 +36,6 @@ export default {
         const results = result.data.data.snowdepths
         for (let i = 0; i < results.length; i++) {
           const marker = { lat: results[i].from.pos.lat, lon: results[i].from.pos.lon }
-          console.log(marker)
-          console.log(results[i])
           L.marker(marker).addTo(newmap)
         }
       }
