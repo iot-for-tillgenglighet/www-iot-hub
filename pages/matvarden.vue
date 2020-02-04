@@ -27,6 +27,7 @@ export default {
       component.center = e.latlng
       component.radius = e.accuracy
     }
+
     axios({
       method: 'GET',
       url: 'https://iotsundsvall.northeurope.cloudapp.azure.com/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth}}'
@@ -37,7 +38,7 @@ export default {
           const latlng = { lat: results[i].from.pos.lat, lon: results[i].from.pos.lon }
           const marker = L.marker(latlng).addTo(newmap)
           const depths = Math.round(((results[i].depth) + Number.EPSILON) * 100) / 100
-          const popup = L.popup().setContent('Rappoterat snödjup ' + depths + ' cm')
+          const popup = L.popup().setContent('Rapporterat snödjup ' + depths + ' cm')
           marker.bindPopup(popup).openPopup()
         }
       }
