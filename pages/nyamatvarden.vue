@@ -98,7 +98,7 @@ export default {
       const component = this
       axios({
         method: 'POST',
-        url: 'https://iotsundsvall.northeurope.cloudapp.azure.com/api/graphql',
+        url: process.env.baseUrl + '/api/graphql',
         data: {
           query: `
             mutation CreateNew($dep: NewSnowdepthMeasurement!) {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <v-container>
     <div id="newmap" style="height: 80vh;" />
@@ -9,6 +10,8 @@ import axios from 'axios'
 
 export default {
   mounted () {
+    console.log(process.env.baseUrl)
+
     const L = this.$L
 
     const newmap = L.map('newmap')
@@ -22,7 +25,7 @@ export default {
 
     axios({
       method: 'GET',
-      url: 'https://iotsundsvall.northeurope.cloudapp.azure.com/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth}}'
+      url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth}}'
     }).then(
       (result) => {
         const results = result.data.data.snowdepths
