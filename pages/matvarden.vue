@@ -10,23 +10,15 @@ import axios from 'axios'
 export default {
   mounted () {
     const L = this.$L
-    const component = this
 
     const newmap = L.map('newmap')
 
     L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18
+      maxZoom: 20
     }).addTo(newmap)
 
-    newmap.on('locationfound', onLocationFound)
-
-    newmap.locate({ setView: true, watch: true, enableHighAccuracy: true })
-
-    function onLocationFound (e) {
-      component.center = e.latlng
-      component.radius = e.accuracy
-    }
+    newmap.setView([62.3908, 17.3096], 11)
 
     axios({
       method: 'GET',
@@ -39,7 +31,7 @@ export default {
           const marker = L.marker(latlng).addTo(newmap)
           const depths = Math.round(((results[i].depth) + Number.EPSILON) * 100) / 100
           const popup = L.popup().setContent('Rapporterat snödjup ' + depths + ' cm')
-          marker.bindPopup(popup).openPopup()
+          marker.bindPopup(popup)
         }
       }
     )
