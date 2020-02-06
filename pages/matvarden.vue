@@ -10,8 +10,6 @@ import axios from 'axios'
 
 export default {
   mounted () {
-    console.log(process.env.baseUrl)
-
     const L = this.$L
 
     const newmap = L.map('newmap')

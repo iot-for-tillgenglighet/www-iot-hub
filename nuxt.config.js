@@ -6,7 +6,7 @@ export default {
   ** Headers of the page
   */
   env: {
-    baseUrl: 'http://localhost:8282'
+    baseUrl: process.env.BASE_URL || 'https://iotsundsvall.northeurope.cloudapp.azure.com'
   },
   head: {
     titleTemplate: '%s - ' + process.env.npm_package_name,
