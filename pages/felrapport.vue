@@ -22,7 +22,6 @@
             :cols="card.flex"
           >
             <v-card
-              @click="sendFel1"
               v-bind="card.style"
               class="justify-center"
             >
@@ -40,6 +39,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
   data: () => ({
@@ -67,16 +67,15 @@ export default {
       }
     ]
   }),
-  methods: {
-    sendFel1 () {
-      console.log('Snöröjning')
-    },
-    sendFel2 () {
-      console.log('Halka')
-    },
-    sendFel3 () {
-      console.log('Something...')
-    }
+  mounted () {
+    axios({
+      method: 'GET',
+      url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth}}'
+    }).then(
+      (result) => {
+        console.log(result.data.data.snowdepths)
+      }
+    )
   }
 }
 </script>
