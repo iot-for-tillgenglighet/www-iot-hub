@@ -30,18 +30,18 @@
           dense
           outlined
           type="success"
-          dismissible
         >
           Nytt mätvärde sparat.
         </v-alert>
+      </v-row>
+      <v-row>
         <v-alert
           v-model="errorAlert"
           dense
           outlined
           type="error"
-          dismissible
         >
-          Kunde inte spara nytt mätvärde.
+          Mätvärde ej sparats.
         </v-alert>
       </v-row>
       <br>
@@ -61,8 +61,8 @@ export default {
       range: [0, 200],
       posLat: 0,
       posLon: 0,
-      successAlert: false,
-      errorAlert: false
+      successAlert: true,
+      errorAlert: true
     }
   },
   mounted () {
@@ -139,3 +139,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  div.row {
+    justify-content: center;
+  }
+</style>

@@ -19,23 +19,54 @@ export default {
       maxZoom: 20
     }).addTo(newmap)
 
-    newmap.setView([62.3908, 17.3096], 11)
+    newmap.setView([62.3908, 17.3096], 12)
 
     axios({
       method: 'GET',
-      url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth}}'
+      url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth,manual}}'
     }).then(
       (result) => {
         const results = result.data.data.snowdepths
         for (let i = 0; i < results.length; i++) {
           const latlng = { lat: results[i].from.pos.lat, lon: results[i].from.pos.lon }
-          const marker = L.marker(latlng).addTo(newmap)
           const depths = Math.round(((results[i].depth) + Number.EPSILON) * 100) / 100
-          const popup = L.popup().setContent('Rapporterat snödjup ' + depths + ' cm')
-          marker.bindPopup(popup)
+          const manual = results[i].manual
+          if (manual === true) {
+            L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: 'manualPopup' })
+              .setLatLng(latlng)
+              .setContent(depths + ' cm')
+              .openOn(newmap)
+          } else {
+            L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: 'sensorPopup' })
+              .setLatLng(latlng)
+              .setContent(depths + ' cm')
+              .openOn(newmap)
+          }
         }
       }
     )
   }
 }
 </script>
+
+<style lang="scss">
+div.leaflet-popup {
+  width: 70px;
+}
+div.leaflet-popup.manualPopup {
+  div.leaflet-popup-content-wrapper {
+    background: pink;
+  }
+  div.leaflet-popup-tip {
+    background: pink;
+  }
+}
+div.leaflet-popup.sensorPopup {
+  div.leaflet-popup-content-wrapper {
+    background: lightblue;
+  }
+  div.leaflet-popup-tip {
+    background: lightblue;
+  }
+}
+</style>
