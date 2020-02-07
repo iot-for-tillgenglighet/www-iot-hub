@@ -55,7 +55,7 @@ export default {
         to: '/snodjup'
       },
       {
-        title: 'Felrapportering',
+        title: 'Problemrapportering',
         flex: 6,
         src: 'https://www.elegantthemes.com/blog/wp-content/uploads/2016/03/500-internal-server-error-featured-image-1.png',
         to: '/felrapport'

@@ -77,7 +77,7 @@ export default {
         },
         {
           icon: 'mdi-alert-outline',
-          title: 'Felrapportering',
+          title: 'Problemrapportering',
           to: '/felrapport'
         }
       ],

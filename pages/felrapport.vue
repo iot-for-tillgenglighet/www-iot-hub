@@ -10,10 +10,10 @@
         class="text-center"
       >
         <h1>
-          Felrapportering
+          Problemrapportering
         </h1>
         <p>
-          Välj vilken typ av fel du vill rapportera.
+          Välj vilken typ av problem du vill rapportera.
         </p>
         <v-row dense>
           <v-col
@@ -76,6 +76,47 @@ export default {
         console.log(result.data.data.snowdepths)
       }
     )
+  },
+  methods: {
+    sendProblem () {
+      axios({
+        method: 'POST',
+        url: process.env.baseUrl + '/api/graphql',
+        data: {
+          query: `
+            mutation CreateNew($dep: NewSnowdepthMeasurement!) {
+              addSnowdepthMeasurement(input: $dep) {
+                from {
+                  pos {
+                    lon
+                    lat
+                  }
+                }
+                depth
+                when
+              }
+            }
+          `,
+          variables: {
+            'dep': {
+              'pos': {
+                'lon': '',
+                'lat': ''
+              },
+              'depth': ''
+            }
+          }
+        },
+        headers: { 'content-type': 'application/json' }
+      }).then(
+        (result) => {
+          // resetting data and error so that eslint doesn't complain
+          result.data = ''
+        }, (error) => {
+          error = ''
+        }
+      )
+    }
   }
 }
 </script>
