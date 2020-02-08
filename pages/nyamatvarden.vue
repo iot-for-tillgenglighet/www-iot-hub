@@ -25,24 +25,28 @@
         </v-btn>
       </v-row>
       <v-row>
-        <v-alert
-          v-model="successAlert"
-          dense
-          outlined
-          type="success"
-        >
-          Nytt mätvärde sparat.
-        </v-alert>
+        <transition name="fade">
+          <v-alert
+            v-model="successAlert"
+            dense
+            outlined
+            type="success"
+          >
+            Nytt mätvärde sparat.
+          </v-alert>
+        </transition>
       </v-row>
       <v-row>
-        <v-alert
-          v-model="errorAlert"
-          dense
-          outlined
-          type="error"
-        >
-          Mätvärde ej sparats.
-        </v-alert>
+        <transition name="fade">
+          <v-alert
+            v-model="errorAlert"
+            dense
+            outlined
+            type="error"
+          >
+            Mätvärde ej sparats.
+          </v-alert>
+        </transition>
       </v-row>
       <br>
     </v-card-text>
@@ -61,8 +65,8 @@ export default {
       range: [0, 200],
       posLat: 0,
       posLon: 0,
-      successAlert: true,
-      errorAlert: true
+      successAlert: false,
+      errorAlert: false
     }
   },
   mounted () {
@@ -129,10 +133,12 @@ export default {
         (result) => {
           // resetting data and error so that eslint doesn't complain
           result.data = ''
-          component.successAlert = true
+          setTimeout(() => { component.successAlert = true }, 250)
+          setTimeout(() => { component.successAlert = false }, 4000)
         }, (error) => {
           error = ''
-          component.errorAlert = true
+          setTimeout(() => { component.errorAlert = true }, 250)
+          setTimeout(() => { component.errorAlert = false }, 4000)
         }
       )
     }
@@ -143,5 +149,11 @@ export default {
 <style lang="scss">
   div.row {
     justify-content: center;
+  }
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0
   }
 </style>

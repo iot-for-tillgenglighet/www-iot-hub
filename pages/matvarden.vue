@@ -36,7 +36,8 @@ export default {
               .setLatLng(latlng)
               .setContent(depths + ' cm')
               .openOn(newmap)
-          } else {
+          }
+          if (manual === false) {
             L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: 'sensorPopup' })
               .setLatLng(latlng)
               .setContent(depths + ' cm')
@@ -48,25 +49,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-div.leaflet-popup {
-  width: 70px;
-}
-div.leaflet-popup.manualPopup {
-  div.leaflet-popup-content-wrapper {
-    background: pink;
-  }
-  div.leaflet-popup-tip {
-    background: pink;
-  }
-}
-div.leaflet-popup.sensorPopup {
-  div.leaflet-popup-content-wrapper {
-    background: lightblue;
-  }
-  div.leaflet-popup-tip {
-    background: lightblue;
-  }
-}
-</style>
