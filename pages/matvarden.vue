@@ -23,7 +23,7 @@ export default {
 
     axios({
       method: 'GET',
-      url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth,manual}}'
+      url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}},when,depth,manual}}'
     }).then(
       (result) => {
         const results = result.data.data.snowdepths

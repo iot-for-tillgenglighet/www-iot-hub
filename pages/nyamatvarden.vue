@@ -133,11 +133,11 @@ export default {
         (result) => {
           // resetting data and error so that eslint doesn't complain
           result.data = ''
-          setTimeout(() => { component.successAlert = true }, 250)
+          setTimeout(() => { component.successAlert = true }, 500)
           setTimeout(() => { component.successAlert = false }, 4000)
         }, (error) => {
           error = ''
-          setTimeout(() => { component.errorAlert = true }, 250)
+          setTimeout(() => { component.errorAlert = true }, 500)
           setTimeout(() => { component.errorAlert = false }, 4000)
         }
       )
