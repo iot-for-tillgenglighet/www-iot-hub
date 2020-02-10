@@ -5,6 +5,9 @@ export default {
   /*
   ** Headers of the page
   */
+  env: {
+    baseUrl: process.env.BASE_URL || 'https://iotsundsvall.northeurope.cloudapp.azure.com'
+  },
   head: {
     titleTemplate: '%s - ' + process.env.npm_package_name,
     title: process.env.npm_package_name || '',

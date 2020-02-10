@@ -19,3 +19,22 @@ footer.v-footer--fixed {
 nav.v-navigation-drawer--temporary:not(.v-navigation-drawer--close) {
   z-index: 9500;
 }
+div.leaflet-popup {
+  width: 70px;
+}
+div.leaflet-popup.manualPopup {
+  div.leaflet-popup-content-wrapper {
+    background: pink;
+  }
+  div.leaflet-popup-tip {
+    background: pink;
+  }
+}
+div.leaflet-popup.sensorPopup {
+  div.leaflet-popup-content-wrapper {
+    background: lightblue;
+  }
+  div.leaflet-popup-tip {
+    background: lightblue;
+  }
+}

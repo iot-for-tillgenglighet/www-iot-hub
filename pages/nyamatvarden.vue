@@ -25,24 +25,28 @@
         </v-btn>
       </v-row>
       <v-row>
-        <v-alert
-          v-model="successAlert"
-          dense
-          outlined
-          type="success"
-          dismissible
-        >
-          Nytt mätvärde sparat.
-        </v-alert>
-        <v-alert
-          v-model="errorAlert"
-          dense
-          outlined
-          type="error"
-          dismissible
-        >
-          Kunde inte spara nytt mätvärde.
-        </v-alert>
+        <transition name="fade">
+          <v-alert
+            v-model="successAlert"
+            dense
+            outlined
+            type="success"
+          >
+            Nytt mätvärde sparat.
+          </v-alert>
+        </transition>
+      </v-row>
+      <v-row>
+        <transition name="fade">
+          <v-alert
+            v-model="errorAlert"
+            dense
+            outlined
+            type="error"
+          >
+            Mätvärde ej sparats.
+          </v-alert>
+        </transition>
       </v-row>
       <br>
     </v-card-text>
@@ -70,9 +74,9 @@ export default {
     const component = this
     const newmap = L.map('map').setView([62.3908, 17.3069], 13)
 
-    L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18
+      maxZoom: 20
     }).addTo(newmap)
 
     newmap.on('locationfound', onLocationFound)
@@ -98,7 +102,7 @@ export default {
       const component = this
       axios({
         method: 'POST',
-        url: 'https://iotsundsvall.northeurope.cloudapp.azure.com/api/graphql',
+        url: process.env.baseUrl + '/api/graphql',
         data: {
           query: `
             mutation CreateNew($dep: NewSnowdepthMeasurement!) {
@@ -129,13 +133,27 @@ export default {
         (result) => {
           // resetting data and error so that eslint doesn't complain
           result.data = ''
-          component.successAlert = true
+          setTimeout(() => { component.successAlert = true }, 500)
+          setTimeout(() => { component.successAlert = false }, 4000)
         }, (error) => {
           error = ''
-          component.errorAlert = true
+          setTimeout(() => { component.errorAlert = true }, 500)
+          setTimeout(() => { component.errorAlert = false }, 4000)
         }
       )
     }
   }
 }
 </script>
+
+<style lang="scss">
+  div.row {
+    justify-content: center;
+  }
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0
+  }
+</style>
