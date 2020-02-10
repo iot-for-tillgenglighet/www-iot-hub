@@ -14,12 +14,12 @@ export default {
 
     const newmap = L.map('newmap')
 
-    L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 20
     }).addTo(newmap)
 
-    newmap.setView([62.3908, 17.3096], 12)
+    newmap.setView([62.3908, 17.3069], 12)
 
     axios({
       method: 'GET',
@@ -30,19 +30,12 @@ export default {
         for (let i = 0; i < results.length; i++) {
           const latlng = { lat: results[i].from.pos.lat, lon: results[i].from.pos.lon }
           const depths = Math.round(((results[i].depth) + Number.EPSILON) * 100) / 100
-          const manual = results[i].manual
-          if (manual === true) {
-            L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: 'manualPopup' })
-              .setLatLng(latlng)
-              .setContent(depths + ' cm')
-              .openOn(newmap)
-          }
-          if (manual === false) {
-            L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: 'sensorPopup' })
-              .setLatLng(latlng)
-              .setContent(depths + ' cm')
-              .openOn(newmap)
-          }
+          const classLabelName = (results[i].manual === true ? 'manualPopup' : 'sensorPopup')
+
+          L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: classLabelName })
+            .setLatLng(latlng)
+            .setContent(depths + ' cm')
+            .openOn(newmap)
         }
       }
     )
