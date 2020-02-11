@@ -32,7 +32,7 @@ export default {
           const depths = Math.round(((results[i].depth) + Number.EPSILON) * 100) / 100
           const classLabelName = (results[i].manual === true ? 'manualPopup' : 'sensorPopup')
 
-          L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: classLabelName })
+          L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: classLabelName, autoPan: false })
             .setLatLng(latlng)
             .setContent(depths + ' cm')
             .openOn(newmap)
