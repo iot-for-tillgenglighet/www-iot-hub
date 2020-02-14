@@ -20,6 +20,7 @@
           color="blue"
           text
           outlined
+          :disabled="isDisabled"
         >
           Spara
         </v-btn>
@@ -66,26 +67,48 @@ export default {
       posLat: 0,
       posLon: 0,
       successAlert: false,
-      errorAlert: false
+      errorAlert: false,
+      isDisabled: true
     }
   },
   mounted () {
     const L = this.$L
     const component = this
-    const newmap = L.map('map').setView([62.3908, 17.3069], 13)
+    const newMap = L.map('map').setView([62.3908, 17.3069], 13)
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 20
-    }).addTo(newmap)
+    }).addTo(newMap)
 
-    newmap.on('locationfound', onLocationFound)
+    newMap.locate({ setView: true, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
 
-    newmap.locate({ setView: true, watch: true, enableHighAccuracy: true })
+    newMap.on('locationfound', onLocationFound)
+    newMap.on('locationerror', onLocationError)
 
-    const markers = L.layerGroup().addTo(newmap)
+    const markers = L.layerGroup().addTo(newMap)
+
+    function onLocationError() {
+      console.log('Could not find location')
+    }
 
     function onLocationFound (e) {
+      let latitude = e.latlng.lat
+      let longitude = e.latlng.lng
+      console.log(latitude);
+      console.log(e)
+
+      if (longitude < 15.516210 || longitude > 17.975816)
+        return 
+
+      if (latitude < 62.042301 ||  latitude > 62.648987)
+        return
+
+      component.isDisabled = false
+
+      /*let eventLat = 0.0;
+      console.log(eventLat)
+
       component.center = e.latlng
       component.radius = e.accuracy
 
@@ -94,8 +117,19 @@ export default {
 
       markers.clearLayers()
 
-      L.marker(e.latlng).addTo(markers)
+      L.marker(e.latlng).addTo(markers)*/
+      
     }
+
+    var startPos;
+    var geoSuccess = function(position) {
+      startPos = position;
+      // document.getElementById('startLat').innerHTML = startPos.coords.latitude;
+      // document.getElementById('startLon').innerHTML = startPos.coords.longitude;
+      console.log(position.coords.latitude)
+      console.log("fired TT")
+    };
+    navigator.geolocation.watchPosition(geoSuccess);
   },
   methods: {
     sendData () {
