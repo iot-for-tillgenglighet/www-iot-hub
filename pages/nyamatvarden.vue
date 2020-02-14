@@ -95,41 +95,26 @@ export default {
     function onLocationFound (e) {
       let latitude = e.latlng.lat
       let longitude = e.latlng.lng
-      console.log(latitude);
-      console.log(e)
+
+      component.isDisabled = true
 
       if (longitude < 15.516210 || longitude > 17.975816)
         return 
 
-      if (latitude < 62.042301 ||  latitude > 62.648987)
+      if (latitude < 62.042301 || latitude > 62.648987)
         return
 
       component.isDisabled = false
 
-      /*let eventLat = 0.0;
-      console.log(eventLat)
-
       component.center = e.latlng
-      component.radius = e.accuracy
 
       component.posLat = e.latlng.lat
       component.posLon = e.latlng.lng
 
       markers.clearLayers()
 
-      L.marker(e.latlng).addTo(markers)*/
-      
+      L.marker(e.latlng).addTo(markers)
     }
-
-    var startPos;
-    var geoSuccess = function(position) {
-      startPos = position;
-      // document.getElementById('startLat').innerHTML = startPos.coords.latitude;
-      // document.getElementById('startLon').innerHTML = startPos.coords.longitude;
-      console.log(position.coords.latitude)
-      console.log("fired TT")
-    };
-    navigator.geolocation.watchPosition(geoSuccess);
   },
   methods: {
     sendData () {
@@ -165,7 +150,6 @@ export default {
         headers: { 'content-type': 'application/json' }
       }).then(
         (result) => {
-          // resetting data and error so that eslint doesn't complain
           result.data = ''
           setTimeout(() => { component.successAlert = true }, 500)
           setTimeout(() => { component.successAlert = false }, 4000)
