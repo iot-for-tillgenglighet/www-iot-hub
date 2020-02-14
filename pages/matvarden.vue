@@ -62,22 +62,6 @@ export default {
           doPoll()
       }, 300000)
     }
-
-    // function testData(){
-    //   console.log('testData')
-
-    //   let randomnumber = Math.floor(Math.random() * (25 - 1 + 1)) + 1;
-      
-    //   let stuff = new Snowdepth(new MeasurementPosition(62.3901, 17.3062), "2020-02-13T10:20:22Z", randomnumber, true);
-    //   let data = {
-    //     data: {
-    //       data: {
-    //         snowdepths: [stuff]
-    //       }
-    //     }
-    //   }
-    //   placePopups(data)
-    // }
   }
 }
 </script>
