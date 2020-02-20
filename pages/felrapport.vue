@@ -23,6 +23,7 @@
           >
             <v-card
               v-bind="card.style"
+              @click="card.method"
               class="justify-center"
             >
               <v-card-title
@@ -45,7 +46,7 @@ export default {
   data: () => ({
     cards: [
       {
-        title: 'Snöröjning',
+        title: 'Vägskada',
         flex: 12,
         style: {
           color: 'blue lighten-2'
@@ -59,7 +60,7 @@ export default {
         }
       },
       {
-        title: 'Something',
+        title: 'Otrygghet',
         flex: 12,
         style: {
           color: 'blue darken-2'
@@ -67,33 +68,22 @@ export default {
       }
     ]
   }),
-  mounted () {
-    axios({
-      method: 'GET',
-      url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}}when,depth}}'
-    }).then(
-      (result) => {
-        console.log(result.data.data.snowdepths)
-      }
-    )
-  },
   methods: {
-    sendProblem () {
+    sendVagskada () {
       axios({
         method: 'POST',
         url: process.env.baseUrl + '/api/graphql',
         data: {
           query: `
-            mutation CreateNew($dep: NewSnowdepthMeasurement!) {
-              addSnowdepthMeasurement(input: $dep) {
+            mutation CreateNew($dep: NewVagskada!) {
+              addVagskada(input: $dep) {
                 from {
                   pos {
                     lon
                     lat
                   }
                 }
-                depth
-                when
+                type
               }
             }
           `,
@@ -103,7 +93,83 @@ export default {
                 'lon': '',
                 'lat': ''
               },
-              'depth': ''
+              'type': 'Vägskada'
+            }
+          }
+        },
+        headers: { 'content-type': 'application/json' }
+      }).then(
+        (result) => {
+          // resetting data and error so that eslint doesn't complain
+          result.data = ''
+        }, (error) => {
+          error = ''
+        }
+      )
+    },
+    sendHalka () {
+      axios({
+        method: 'POST',
+        url: process.env.baseUrl + '/api/graphql',
+        data: {
+          query: `
+            mutation CreateNew($dep: NewHalka!) {
+              addHalka(input: $dep) {
+                from {
+                  pos {
+                    lon
+                    lat
+                  }
+                }
+                type
+              }
+            }
+          `,
+          variables: {
+            'dep': {
+              'pos': {
+                'lon': '',
+                'lat': ''
+              },
+              'type': 'Vägskada'
+            }
+          }
+        },
+        headers: { 'content-type': 'application/json' }
+      }).then(
+        (result) => {
+          // resetting data and error so that eslint doesn't complain
+          result.data = ''
+        }, (error) => {
+          error = ''
+        }
+      )
+    },
+    sendOtrygg () {
+      axios({
+        method: 'POST',
+        url: process.env.baseUrl + '/api/graphql',
+        data: {
+          query: `
+            mutation CreateNew($dep: NewOtrygg!) {
+              addOtrygg(input: $dep) {
+                from {
+                  pos {
+                    lon
+                    lat
+                  }
+                }
+                type
+              }
+            }
+          `,
+          variables: {
+            'dep': {
+              'pos': {
+                'lon': '',
+                'lat': ''
+              },
+              'type': 'Otrygg'
             }
           }
         },
