@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 <template>
   <client-only>
     <v-layout
@@ -23,7 +25,7 @@
           >
             <v-card
               v-bind="card.style"
-              @click="card.method"
+              @click="sendReport(card.reportType)"
               class="justify-center"
             >
               <v-card-title
@@ -41,59 +43,73 @@
 
 <script>
 import axios from 'axios'
+import Report from '../components/models/report.model.js'
 
 export default {
-  data: () => ({
-    cards: [
-      {
-        title: 'Vägskada',
-        flex: 12,
-        style: {
-          color: 'blue lighten-2'
+  data () {
+    return {
+      cards: [
+        {
+          title: 'Vägskada',
+          flex: 12,
+          style: {
+            color: 'blue lighten-2'
+          },
+          reportType: 'type_road'
+        },
+        {
+          title: 'Halka',
+          flex: 12,
+          style: {
+            color: 'blue'
+          },
+          reportType: 'type_ice'
+        },
+        {
+          title: 'Otrygghet',
+          flex: 12,
+          style: {
+            color: 'blue darken-2'
+          },
+          reportType: 'type_unsafe'
         }
-      },
-      {
-        title: 'Halka',
-        flex: 12,
-        style: {
-          color: 'blue'
-        }
-      },
-      {
-        title: 'Otrygghet',
-        flex: 12,
-        style: {
-          color: 'blue darken-2'
-        }
-      }
-    ]
-  }),
+      ],
+      posLat: 0,
+      posLon: 0
+    }
+  },
+  mounted () {
+    const component = this
+    navigator.geolocation.watchPosition(function (position){
+      component.posLat = position.coords.latitude
+      component.posLon = position.coords.longitude
+    })
+  },
   methods: {
-    sendVagskada () {
+    sendReport (reportType) {
+      const component = this
       axios({
         method: 'POST',
         url: process.env.baseUrl + '/api/graphql',
         data: {
           query: `
-            mutation CreateNew($dep: NewVagskada!) {
-              addVagskada(input: $dep) {
-                from {
-                  pos {
-                    lon
-                    lat
-                  }
+            mutation create($res: ProblemReportCreateResource!) {
+              create(input: $res) {
+                pos {
+                  lon
+                  lat
                 }
                 type
               }
             }
           `,
           variables: {
-            'dep': {
+            'res': {
               'pos': {
-                'lon': '',
-                'lat': ''
+                'lon': component.posLon,
+                'lat': component.posLat
               },
-              'type': 'Vägskada'
+              'type': reportType
             }
           }
         },
@@ -103,82 +119,7 @@ export default {
           // resetting data and error so that eslint doesn't complain
           result.data = ''
         }, (error) => {
-          error = ''
-        }
-      )
-    },
-    sendHalka () {
-      axios({
-        method: 'POST',
-        url: process.env.baseUrl + '/api/graphql',
-        data: {
-          query: `
-            mutation CreateNew($dep: NewHalka!) {
-              addHalka(input: $dep) {
-                from {
-                  pos {
-                    lon
-                    lat
-                  }
-                }
-                type
-              }
-            }
-          `,
-          variables: {
-            'dep': {
-              'pos': {
-                'lon': '',
-                'lat': ''
-              },
-              'type': 'Vägskada'
-            }
-          }
-        },
-        headers: { 'content-type': 'application/json' }
-      }).then(
-        (result) => {
-          // resetting data and error so that eslint doesn't complain
-          result.data = ''
-        }, (error) => {
-          error = ''
-        }
-      )
-    },
-    sendOtrygg () {
-      axios({
-        method: 'POST',
-        url: process.env.baseUrl + '/api/graphql',
-        data: {
-          query: `
-            mutation CreateNew($dep: NewOtrygg!) {
-              addOtrygg(input: $dep) {
-                from {
-                  pos {
-                    lon
-                    lat
-                  }
-                }
-                type
-              }
-            }
-          `,
-          variables: {
-            'dep': {
-              'pos': {
-                'lon': '',
-                'lat': ''
-              },
-              'type': 'Otrygg'
-            }
-          }
-        },
-        headers: { 'content-type': 'application/json' }
-      }).then(
-        (result) => {
-          // resetting data and error so that eslint doesn't complain
-          result.data = ''
-        }, (error) => {
+          console.log(error)
           error = ''
         }
       )
