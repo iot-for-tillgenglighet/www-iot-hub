@@ -88,6 +88,13 @@ export default {
   methods: {
     sendReport (reportType) {
       const component = this
+
+      if (component.posLon < 15.516210 || component.posLon > 17.975816)
+        return
+
+      if (component.posLat < 62.042301 || component.posLat > 62.648987)
+        return
+
       axios({
         method: 'POST',
         url: process.env.baseUrl + '/api/graphql',

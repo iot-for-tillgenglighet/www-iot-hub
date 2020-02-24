@@ -1,15 +1,6 @@
 <template>
   <v-container>
     <div id="newmap" style="height: 80vh;" />
-    <v-container>
-      <v-btn
-        outlined
-        color="blue"
-        text
-      >
-        GetReports
-      </v-btn>
-    </v-container>
   </v-container>
 </template>
 
@@ -29,27 +20,41 @@ export default {
       maxZoom: 20
     }).addTo(newmap)
 
+    const popupsLayer = L.layerGroup().addTo(newmap)
+
     newmap.setView([62.3908, 17.3096], 11)
 
-    axios({
-    method: 'GET',
-    url: process.env.baseUrl + '/api/graphql?query={getAll{id,pos{lat,lon},type}}'
-    }).then(
-      (result) => {
-        console.log(result)
-        const results = result.data.data.getAll
-        for (let i = 0; i < results.length; i++) {
-          const latlng = { lat: results[i].pos.lat, lon: results[i].pos.lon }
-          const marker = L.marker(latlng).addTo(newmap)
-          const types = results[i].type
-          const popup = L.popup().setContent('Rapporterad ' + types)
-          marker.bindPopup(popup)
+    fetchData()
+
+    function fetchData () {
+      axios({
+        method: 'GET',
+        url: process.env.baseUrl + '/api/graphql?query={getAll{id,pos{lat,lon},type}}'
+      }).then(
+        (result) => {
+          placePopups(result)
         }
+      )
+    }
+
+    function placePopups (result) {
+      const results = result.data.data.getAll
+      
+      popupsLayer.clearLayers()
+
+      for (let i = 0; i < results.length; i++) {
+        const latlng = { lat: results[i].pos.lat, lon: results[i].pos.lon }
+        const types = results[i].type
+        
+        L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, autoPan: false })
+          .setLatLng(latlng)
+          .setContent('Rapporterad ' + types)
+          .addTo(popupsLayer)
       }
-    )
-  },
+    }
+  }/*,
   methods: {
-/*     getAll () {
+    getAll () {
       axios({
         method: 'GET',
         url: process.env.baseUrl + '/api/graphql?query={getAll{id,pos{lat,lon},type}}'
@@ -66,12 +71,10 @@ export default {
           }
         }
       )
-    } */
-/*  getCategories () {
-      
     }
-    
-    */
-  }
+    getCategories () {
+        
+      }
+  }*/
 }
 </script>
