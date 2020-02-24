@@ -2,6 +2,21 @@
 <template>
   <v-container>
     <div id="newmap" style="height: 80vh;" />
+     <v-layout
+      justify-center
+      align-center
+    >
+      <v-btn
+        class="justify-center white--text"
+        x-large
+        to="/snowdepth/add"
+        outlined
+        text
+        color="blue"
+      >
+        Ny snödjupsmätning
+      </v-btn>
+    </v-layout>
   </v-container>
 </template>
 

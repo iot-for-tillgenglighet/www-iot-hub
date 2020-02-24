@@ -46,19 +46,19 @@ export default {
         title: 'Väder',
         flex: 12,
         src: 'https://wi-images.condecdn.net/image/doEYpG6Xd87/crop/2040/f/weather.jpg',
-        to: '/vader'
+        to: '/weather'
       },
       {
         title: 'Snödjup',
         flex: 6,
         src: 'https://i0.wp.com/www.heartmybackpack.com/wp-content/uploads/2017/01/IMG_3916.jpg',
-        to: '/snodjup'
+        to: '/snowdepth/overview'
       },
       {
         title: 'Felrapportering',
         flex: 6,
         src: 'https://www.elegantthemes.com/blog/wp-content/uploads/2016/03/500-internal-server-error-featured-image-1.png',
-        to: '/felrapport'
+        to: '/problemreport/overview'
       }
     ]
   })
