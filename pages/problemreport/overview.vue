@@ -1,12 +1,25 @@
 <template>
-  <v-container>
+  <v-container class="mx-auto justify-center">
     <div id="newmap" style="height: 80vh;" />
+    <v-layout
+      justify-center
+      align-center
+    >
+      <v-btn
+        class="justify-center white--text"
+        x-large
+        to="/problemreport/add"
+        outlined
+        text
+        color="blue"
+      >
+        Ny felrapport
+      </v-btn>
+    </v-layout>
   </v-container>
 </template>
 
 <script>
-// import axios from 'axios'
-import Report from '../components/models/report.model.js'
 import axios from 'axios'
 
 export default {

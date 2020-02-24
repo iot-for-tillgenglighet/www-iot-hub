@@ -43,7 +43,6 @@
 
 <script>
 import axios from 'axios'
-import Report from '../components/models/report.model.js'
 
 export default {
   data () {
