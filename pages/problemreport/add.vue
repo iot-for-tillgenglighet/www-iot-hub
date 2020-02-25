@@ -35,6 +35,24 @@
               />
             </v-card>
           </v-col>
+          <v-col>
+            <v-alert
+              v-model="successAlert"
+              dense
+              outlined
+              type="success"
+            >
+              Felrapport skickad.
+            </v-alert>
+            <v-alert
+              v-model="errorAlert"
+              dense
+              outlined
+              type="error"
+            >
+              Felrapport ej skickad.
+            </v-alert>
+          </v-col>
         </v-row>
       </v-container>
     </v-layout>
@@ -74,7 +92,9 @@ export default {
         }
       ],
       posLat: 0,
-      posLon: 0
+      posLon: 0,
+      successAlert: false,
+      errorAlert: false
     }
   },
   mounted () {
@@ -124,9 +144,12 @@ export default {
         (result) => {
           // resetting data and error so that eslint doesn't complain
           result.data = ''
+          setTimeout(() => { component.successAlert = true }, 500)
+          setTimeout(() => { component.successAlert = false }, 4000)
         }, (error) => {
-          console.log(error)
           error = ''
+          setTimeout(() => { component.errorAlert = true }, 500)
+          setTimeout(() => { component.errorAlert = false }, 4000)
         }
       )
     }

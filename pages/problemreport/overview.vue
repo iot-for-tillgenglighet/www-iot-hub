@@ -5,6 +5,11 @@
       justify-center
       align-center
     >
+      <v-checkbox
+        v-model="checkbox"
+        :label="`Visa halka`"
+      >
+      </v-checkbox>
       <v-btn
         class="justify-center white--text"
         x-large
@@ -23,6 +28,11 @@
 import axios from 'axios'
 
 export default {
+  data () {
+    return {
+      checkbox: true
+    }
+  },
   mounted () {
     const L = this.$L
 
@@ -58,36 +68,24 @@ export default {
       for (let i = 0; i < results.length; i++) {
         const latlng = { lat: results[i].pos.lat, lon: results[i].pos.lon }
         const types = results[i].type
-        
-        L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, autoPan: false })
+        let classLabelName = results[i].type
+        if (results[i].type = "type_ice")
+          classLabelName = "type_ice"
+
+        if (results[i].type = "type_unsafe")
+          classLabelName = "type_unsafe"
+
+        L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: classLabelName, autoPan: false })
           .setLatLng(latlng)
           .setContent('Rapporterad ' + types)
           .addTo(popupsLayer)
       }
     }
-  }/*,
+  },
   methods: {
-    getAll () {
-      axios({
-        method: 'GET',
-        url: process.env.baseUrl + '/api/graphql?query={getAll{id,pos{lat,lon},type}}'
-        }).then(
-          (result) => {
-          const results = result.data.data.getAll
-          for (let i = 0; i < results.length; i++) {
-            const latlng = { lat: results[i].pos.lat, lon: results[i].pos.lon }
-            const marker = L.marker(latlng).addTo(newmap)
-            const depths = Math.round(((results[i].depth) + Number.EPSILON) * 100) / 100
-            const types = results[i].reportType
-            const popup = L.popup().setContent('Rapporterad ' + types)
-            marker.bindPopup(popup)
-          }
-        }
-      )
+    hideIce () {
+
     }
-    getCategories () {
-        
-      }
-  }*/
+  }
 }
 </script>
