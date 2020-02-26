@@ -6,7 +6,7 @@
       align-center
     >
       <v-checkbox
-        v-model="checkbox"
+        v-model="iceVisible"
         :label="`Visa halka`"
       >
       </v-checkbox>
@@ -30,7 +30,7 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      checkbox: true
+      iceVisible: true
     }
   },
   mounted () {
@@ -68,24 +68,103 @@ export default {
       for (let i = 0; i < results.length; i++) {
         const latlng = { lat: results[i].pos.lat, lon: results[i].pos.lon }
         const types = results[i].type
-        let classLabelName = results[i].type
-        if (results[i].type = "type_ice")
-          classLabelName = "type_ice"
-
-        if (results[i].type = "type_unsafe")
-          classLabelName = "type_unsafe"
-
+        const classLabelName = results[i].type
+        
         L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: classLabelName, autoPan: false })
           .setLatLng(latlng)
           .setContent('Rapporterad ' + types)
           .addTo(popupsLayer)
       }
     }
-  },
-  methods: {
-    hideIce () {
 
+    const response = [
+      {
+        pos: {
+          lat: 62.3901,
+          lon: 17.3062
+        },
+        type: "type_ice"
+      },
+      {
+        pos: {
+          lat: 62.3901,
+          lon: 17.3062
+        },
+        type: "type_unsafe"
+      },
+      {
+        pos: {
+          lat: 62.3901,
+          lon: 17.3062
+        },
+        type: "type_road"
+      },
+      {
+        pos: {
+          lat: 62.3901,
+          lon: 17.3062
+        },
+        type: "type_unsafe"
+      },
+      {
+        pos: {
+          lat: 62.3901,
+          lon: 17.3062
+        },
+        type: "type_road"
+      },
+      {
+        pos: {
+          lat: 62.3901,
+          lon: 17.3062
+        },
+        type: "type_ice"
+      },
+      {
+        pos: {
+          lat: 62.3901,
+          lon: 17.3062
+        },
+        type: "type_road"
+      },
+      {
+        pos: {
+          lat: 62.3901,
+          lon: 17.3062
+        },
+        type: "type_ice"
+      }
+    ]
+      
+    let reportTypes = []
+    for (let i = 0; i < response.length; i++) {
+      if(findDupes(reportTypes,response[i].type))
+        continue
+
+      reportTypes.push(response[i].type)
+    }
+    console.log(reportTypes)
+
+    function findDupes (haystack, needle) {
+      for (let i = 0; i < haystack.length; i++) {
+        if (needle == haystack[i])
+          return true
+
+      }
+      return false
     }
   }
 }
 </script>
+
+<style lang="scss">
+div.leaflet-popup.type_ice {
+  visibility: visible;
+  div.leaflet-popup-content-wrapper {
+    background: lightblue;
+  }
+  div.leaflet-popup-tip {
+    background: lightblue;
+  }
+}
+</style>
