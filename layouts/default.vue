@@ -68,17 +68,17 @@ export default {
         {
           icon: 'mdi-weather-partly-cloudy',
           title: 'Väder',
-          to: '/vader'
+          to: '/weather'
         },
         {
           icon: 'mdi-snowflake',
           title: 'Snödjup',
-          to: '/snodjup'
+          to: '/snowdepth/overview'
         },
         {
           icon: 'mdi-alert-outline',
           title: 'Felrapportering',
-          to: '/felrapport'
+          to: '/problemreport/overview'
         }
       ],
       right: true,
