@@ -5,11 +5,6 @@
       justify-center
       align-center
     >
-      <v-checkbox
-        v-model="iceVisible"
-        :label="`Visa halka`"
-      >
-      </v-checkbox>
       <v-btn
         class="justify-center white--text"
         x-large
@@ -28,11 +23,7 @@
 import axios from 'axios'
 
 export default {
-  data () {
-    return {
-      iceVisible: true
-    }
-  },
+
   mounted () {
     const L = this.$L
 
@@ -43,7 +34,9 @@ export default {
       maxZoom: 20
     }).addTo(newmap)
 
-    const popupsLayer = L.layerGroup().addTo(newmap)
+    const iceLayer = L.layerGroup().addTo(newmap)
+    const roadLayer = L.layerGroup().addTo(newmap)
+    const safetyLayer = L.layerGroup().addTo(newmap)
 
     newmap.setView([62.3908, 17.3096], 11)
 
@@ -63,18 +56,45 @@ export default {
     function placePopups (result) {
       const results = result.data.data.getAll
       
-      popupsLayer.clearLayers()
+      iceLayer.clearLayers()
+      roadLayer.clearLayers()
+      safetyLayer.clearLayers()
 
       for (let i = 0; i < results.length; i++) {
         const latlng = { lat: results[i].pos.lat, lon: results[i].pos.lon }
         const types = results[i].type
         const classLabelName = results[i].type
+        const props = { autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: classLabelName, autoPan: false }
         
-        L.popup({ autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: classLabelName, autoPan: false })
+        if (classLabelName == "type_ice") {
+          const icePop = L.popup(props)
           .setLatLng(latlng)
           .setContent('Rapporterad ' + types)
-          .addTo(popupsLayer)
+          .addTo(iceLayer)
+        }
+
+        if (classLabelName == "type_road") {
+          const roadPop = L.popup(props)
+          .setLatLng(latlng)
+          .setContent('Rapporterad ' + types)
+          .addTo(roadLayer)
+        }
+
+        if (classLabelName == "type_unsafe") {
+          const safetyPop = L.popup(props)
+          .setLatLng(latlng)
+          .setContent('Rapporterad ' + types)
+          .addTo(safetyLayer)
+        }
       }
+
+      const popupOverlay = {
+        "Halka": iceLayer,
+        "Vägskador": roadLayer,
+        "Otrygghet": safetyLayer
+      }
+
+      L.control.layers(null, popupOverlay).addTo(newmap)
     }
 
     const response = [
@@ -143,7 +163,6 @@ export default {
 
       reportTypes.push(response[i].type)
     }
-    console.log(reportTypes)
 
     function findDupes (haystack, needle) {
       for (let i = 0; i < haystack.length; i++) {
@@ -156,15 +175,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-div.leaflet-popup.type_ice {
-  visibility: visible;
-  div.leaflet-popup-content-wrapper {
-    background: lightblue;
-  }
-  div.leaflet-popup-tip {
-    background: lightblue;
-  }
-}
-</style>
