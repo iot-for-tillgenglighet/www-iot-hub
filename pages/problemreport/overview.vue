@@ -21,6 +21,7 @@
 
 <script>
 import axios from 'axios'
+import ReportCategory from '../../components/models/reportCategory.model.js'
 
 export default {
 
@@ -38,64 +39,11 @@ export default {
     const roadLayer = L.layerGroup().addTo(newmap)
     const safetyLayer = L.layerGroup().addTo(newmap)
 
-    newmap.setView([62.3908, 17.3096], 11)
-
-    fetchData()
-
-    function fetchData () {
-      axios({
-        method: 'GET',
-        url: process.env.baseUrl + '/api/graphql?query={getAll{id,pos{lat,lon},type}}'
-      }).then(
-        (result) => {
-          placePopups(result)
-        }
-      )
-    }
-
-    function placePopups (result) {
-      const results = result.data.data.getAll
-      
-      iceLayer.clearLayers()
-      roadLayer.clearLayers()
-      safetyLayer.clearLayers()
-
-      for (let i = 0; i < results.length; i++) {
-        const latlng = { lat: results[i].pos.lat, lon: results[i].pos.lon }
-        const types = results[i].type
-        const classLabelName = results[i].type
-        const props = { autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, className: classLabelName, autoPan: false }
-        
-        if (classLabelName == "type_ice") {
-          const icePop = L.popup(props)
-          .setLatLng(latlng)
-          .setContent('Rapporterad ' + types)
-          .addTo(iceLayer)
-        }
-
-        if (classLabelName == "type_road") {
-          const roadPop = L.popup(props)
-          .setLatLng(latlng)
-          .setContent('Rapporterad ' + types)
-          .addTo(roadLayer)
-        }
-
-        if (classLabelName == "type_unsafe") {
-          const safetyPop = L.popup(props)
-          .setLatLng(latlng)
-          .setContent('Rapporterad ' + types)
-          .addTo(safetyLayer)
-        }
-      }
-
-      const popupOverlay = {
-        "Halka": iceLayer,
-        "Vägskador": roadLayer,
-        "Otrygghet": safetyLayer
-      }
-
-      L.control.layers(null, popupOverlay).addTo(newmap)
-    }
+    const categories = [
+      new ReportCategory("halka", "type_ice"),
+      new ReportCategory("otrygghet", "type_unsafe"),
+      new ReportCategory("vägskador", "type_road")
+    ]
 
     const response = [
       {
@@ -155,7 +103,63 @@ export default {
         type: "type_ice"
       }
     ]
-      
+
+    const layers = createLayers(categories, response)
+
+    reportPopups(layers)
+
+    newmap.setView([62.3908, 17.3096], 12)
+
+    fetchData()
+
+    function fetchData () {
+      axios({
+        method: 'GET',
+        url: process.env.baseUrl + '/api/graphql?query={getAll{id,pos{lat,lon},type}}'
+      }).then(
+        (result) => {
+          //placePopups(result)
+        }
+      )
+    }
+
+    function createLayers (categories, response) {
+      let returnArray = []
+      for (let i = 0; i < categories.length; i++) {
+        const x = {
+          layer: L.layerGroup().addTo(newmap),
+          category: categories[i],
+          reports: []
+        }
+        
+        for (let n = 0; n < response.length; n++) {
+            if (response[n].type == categories[i].reportType)
+              x.reports.push(response[n])
+
+        }
+        returnArray.push(x)
+      }
+      console.log(returnArray)
+      return returnArray
+    }
+
+
+    function reportPopups (layers) {
+      const props = { autoClose: false, closeOnClick: false, closeButton: false, closeOnEscapeKey: false, autoPan: false }  
+      const popupOverlay = {}
+      for (let x = 0; x < layers.length; x++) {
+        for (let n = 0; n < layers[x].reports.length; n++) {
+          L.popup(props)
+            .setLatLng({ lat: layers[x].reports[n].pos.lat, lon: layers[x].reports[n].pos.lon })
+            .setContent('Rapporterad ' + layers[x].reports[n].type)
+            .addTo(layers[x].layer)
+        }
+        popupOverlay[layers[x].category.label] = layers[x].layer 
+      }
+
+     L.control.layers(null, popupOverlay).addTo(newmap)
+    }
+
     let reportTypes = []
     for (let i = 0; i < response.length; i++) {
       if(findDupes(reportTypes,response[i].type))
