@@ -17,6 +17,7 @@
         />
         <v-btn
           @click="sendData"
+          :disabled="isDisabled"
           color="blue"
           text
           outlined
@@ -25,24 +26,28 @@
         </v-btn>
       </v-row>
       <v-row>
-        <v-alert
-          v-model="successAlert"
-          dense
-          outlined
-          type="success"
-          dismissible
-        >
-          Nytt mätvärde sparat.
-        </v-alert>
-        <v-alert
-          v-model="errorAlert"
-          dense
-          outlined
-          type="error"
-          dismissible
-        >
-          Kunde inte spara nytt mätvärde.
-        </v-alert>
+        <transition name="fade">
+          <v-alert
+            v-model="successAlert"
+            dense
+            outlined
+            type="success"
+          >
+            Nytt mätvärde sparat.
+          </v-alert>
+        </transition>
+      </v-row>
+      <v-row>
+        <transition name="fade">
+          <v-alert
+            v-model="errorAlert"
+            dense
+            outlined
+            type="error"
+          >
+            Mätvärde ej sparats.
+          </v-alert>
+        </transition>
       </v-row>
       <br>
     </v-card-text>
@@ -62,28 +67,48 @@ export default {
       posLat: 0,
       posLon: 0,
       successAlert: false,
-      errorAlert: false
+      errorAlert: false,
+      isDisabled: true
     }
   },
   mounted () {
     const L = this.$L
     const component = this
-    const newmap = L.map('map').setView([62.3908, 17.3069], 13)
+    const newMap = L.map('map').setView([62.3908, 17.3069], 13)
 
-    L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18
-    }).addTo(newmap)
+      maxZoom: 20
+    }).addTo(newMap)
 
-    newmap.on('locationfound', onLocationFound)
+    newMap.locate({ setView: true, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
 
-    newmap.locate({ setView: true, watch: true, enableHighAccuracy: true })
+    newMap.on('locationfound', onLocationFound)
+    newMap.on('locationerror', onLocationError)
 
-    const markers = L.layerGroup().addTo(newmap)
+    const markers = L.layerGroup().addTo(newMap)
+
+    function onLocationError () {
+      console.log('Could not find location')
+    }
 
     function onLocationFound (e) {
+      const latitude = e.latlng.lat
+      const longitude = e.latlng.lng
+
+      component.isDisabled = true
+
+      if (longitude < 15.516210 || longitude > 17.975816) {
+        return
+      }
+
+      if (latitude < 62.042301 || latitude > 62.648987) {
+        return
+      }
+
+      component.isDisabled = false
+
       component.center = e.latlng
-      component.radius = e.accuracy
 
       component.posLat = e.latlng.lat
       component.posLon = e.latlng.lng
@@ -127,15 +152,28 @@ export default {
         headers: { 'content-type': 'application/json' }
       }).then(
         (result) => {
-          // resetting data and error so that eslint doesn't complain
           result.data = ''
-          component.successAlert = true
+          setTimeout(() => { component.successAlert = true }, 500)
+          setTimeout(() => { component.successAlert = false }, 4000)
         }, (error) => {
           error = ''
-          component.errorAlert = true
+          setTimeout(() => { component.errorAlert = true }, 500)
+          setTimeout(() => { component.errorAlert = false }, 4000)
         }
       )
     }
   }
 }
 </script>
+
+<style lang="scss">
+  div.row {
+    justify-content: center;
+  }
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0
+  }
+</style>
