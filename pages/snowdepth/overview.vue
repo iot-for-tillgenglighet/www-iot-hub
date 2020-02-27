@@ -2,13 +2,26 @@
 <template>
   <v-container>
     <div id="newmap" style="height: 80vh;" />
+    <v-layout
+      justify-center
+      align-center
+    >
+      <v-btn
+        class="justify-center white--text"
+        x-large
+        to="/snowdepth/add"
+        outlined
+        text
+        color="blue"
+      >
+        Ny snödjupsmätning
+      </v-btn>
+    </v-layout>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios'
-import Snowdepth from '../components/models/snowdepth.model.js'
-import MeasurementPosition from '../components/models/measurementPosition.model.js'
 
 export default {
   mounted () {
@@ -28,7 +41,7 @@ export default {
     fetchData()
     doPoll()
 
-    function fetchData(){
+    function fetchData () {
       axios({
         method: 'GET',
         url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}},when,depth,manual}}'
@@ -56,10 +69,10 @@ export default {
       }
     }
 
-    function doPoll() {
+    function doPoll () {
       setTimeout(function () {
-          fetchData()
-          doPoll()
+        fetchData()
+        doPoll()
       }, 300000)
     }
   }

@@ -17,10 +17,10 @@
         />
         <v-btn
           @click="sendData"
+          :disabled="isDisabled"
           color="blue"
           text
           outlined
-          :disabled="isDisabled"
         >
           Spara
         </v-btn>
@@ -88,21 +88,23 @@ export default {
 
     const markers = L.layerGroup().addTo(newMap)
 
-    function onLocationError() {
+    function onLocationError () {
       console.log('Could not find location')
     }
 
     function onLocationFound (e) {
-      let latitude = e.latlng.lat
-      let longitude = e.latlng.lng
+      const latitude = e.latlng.lat
+      const longitude = e.latlng.lng
 
       component.isDisabled = true
 
-      if (longitude < 15.516210 || longitude > 17.975816)
-        return 
-
-      if (latitude < 62.042301 || latitude > 62.648987)
+      if (longitude < 15.516210 || longitude > 17.975816) {
         return
+      }
+
+      if (latitude < 62.042301 || latitude > 62.648987) {
+        return
+      }
 
       component.isDisabled = false
 
