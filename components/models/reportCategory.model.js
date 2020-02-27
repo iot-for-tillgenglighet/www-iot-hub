@@ -1,10 +1,10 @@
 class ReportCategory {
   label;
   reportType;
-  
-  constructor(label, type){
-    this.label = label;
-    this.reportType = type;
+
+  constructor (label, type) {
+    this.label = label
+    this.reportType = type
   }
 }
 

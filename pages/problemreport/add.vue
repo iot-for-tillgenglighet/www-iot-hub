@@ -20,16 +20,15 @@
         <v-row dense>
           <v-col
             v-for="card in cards"
-            :key="card.title"
-            :cols="card.flex"
+            :key="card.label"
+            cols="12"
           >
             <v-card
-              v-bind="card.style"
               @click="sendReport(card.reportType)"
-              class="justify-center"
+              class="justify-center blue lighten-2"
             >
               <v-card-title
-                v-text="card.title"
+                v-text="card.label"
                 primary-title
                 class="justify-center white--text"
               />
@@ -66,30 +65,6 @@ export default {
   data () {
     return {
       cards: [
-        {
-          title: 'Vägskada',
-          flex: 12,
-          style: {
-            color: 'blue lighten-2'
-          },
-          reportType: 'type_road'
-        },
-        {
-          title: 'Halka',
-          flex: 12,
-          style: {
-            color: 'blue'
-          },
-          reportType: 'type_ice'
-        },
-        {
-          title: 'Otrygghet',
-          flex: 12,
-          style: {
-            color: 'blue darken-2'
-          },
-          reportType: 'type_unsafe'
-        }
       ],
       posLat: 0,
       posLon: 0,
@@ -99,20 +74,35 @@ export default {
   },
   mounted () {
     const component = this
-    navigator.geolocation.watchPosition(function (position){
+    navigator.geolocation.watchPosition(function (position) {
       component.posLat = position.coords.latitude
       component.posLon = position.coords.longitude
     })
+
+    getCategories()
+
+    function getCategories () {
+      axios({
+        method: 'GET',
+        url: process.env.baseUrl + '/api/graphql?query={getCategories{id,label,reportType}}'
+      }).then(
+        (result) => {
+          component.cards = result.data.data.getCategories
+        }
+      )
+    }
   },
   methods: {
     sendReport (reportType) {
       const component = this
 
-      if (component.posLon < 15.516210 || component.posLon > 17.975816)
+      if (component.posLon < 15.516210 || component.posLon > 17.975816) {
         return
+      }
 
-      if (component.posLat < 62.042301 || component.posLat > 62.648987)
+      if (component.posLat < 62.042301 || component.posLat > 62.648987) {
         return
+      }
 
       axios({
         method: 'POST',
