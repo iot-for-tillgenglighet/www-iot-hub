@@ -81,12 +81,15 @@ export default {
       maxZoom: 20
     }).addTo(newMap)
 
+    getSensors()
+
     newMap.locate({ setView: true, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
 
     newMap.on('locationfound', onLocationFound)
     newMap.on('locationerror', onLocationError)
 
     const markers = L.layerGroup().addTo(newMap)
+    const sensors = L.layerGroup().addTo(newMap)
 
     function onLocationError () {
       console.log('Could not find location')
@@ -116,6 +119,52 @@ export default {
       markers.clearLayers()
 
       L.marker(e.latlng).addTo(markers)
+    }
+
+    function getSensors () {
+      axios({
+        method: 'GET',
+        url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}},when,depth,manual}}'
+      }).then(
+        (result) => {
+          placeSensors(result)
+        }
+      )
+    }
+
+    /* const data = testData()
+
+    placeSensors(data)
+
+   function testData () {
+      const randomnumber = Math.floor(Math.random() * (25 - 1 + 1)) + 1
+
+      const data = {
+        data: {
+          data: {
+            snowdepths: [
+              new Snowdepth(new MeasurementPosition(62.3901, 17.3062), '2020-03-09T10:20:22Z', randomnumber, false),
+              new Snowdepth(new MeasurementPosition(62.3910, 17.3075), '2020-03-09T10:30:22Z', randomnumber, false)
+            ]
+          }
+        }
+      }
+
+      return data
+    } */
+
+    function placeSensors (data) {
+      sensors.clearLayers()
+
+      const results = data.data.data.snowdepths
+
+      for (let i = 0; i < results.length; i++) {
+        const latlng = { lat: results[i].from.pos.lat, lon: results[i].from.pos.lon }
+
+        if (results[i].manual === false) {
+          L.marker(latlng).addTo(sensors)
+        }
+      }
     }
   },
   methods: {
