@@ -56,6 +56,8 @@
 
 <script>
 import axios from 'axios'
+// import Snowdepth from '../../components/models/snowdepth.model'
+// import MeasurementPosition from '../../components/models/measurementPosition.model'
 
 export default {
   data () {
@@ -89,7 +91,7 @@ export default {
     newMap.on('locationerror', onLocationError)
 
     const markers = L.layerGroup().addTo(newMap)
-    const sensors = L.layerGroup().addTo(newMap)
+    const sensorMarkers = L.layerGroup().addTo(newMap)
 
     function onLocationError () {
       console.log('Could not find location')
@@ -127,6 +129,7 @@ export default {
         url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}},when,depth,manual}}'
       }).then(
         (result) => {
+          console.log(result)
           placeSensors(result)
         }
       )
@@ -136,7 +139,7 @@ export default {
 
     placeSensors(data)
 
-   function testData () {
+    function testData () {
       const randomnumber = Math.floor(Math.random() * (25 - 1 + 1)) + 1
 
       const data = {
@@ -154,7 +157,7 @@ export default {
     } */
 
     function placeSensors (data) {
-      sensors.clearLayers()
+      sensorMarkers.clearLayers()
 
       const results = data.data.data.snowdepths
 
@@ -162,9 +165,15 @@ export default {
         const latlng = { lat: results[i].from.pos.lat, lon: results[i].from.pos.lon }
 
         if (results[i].manual === false) {
-          L.marker(latlng).addTo(sensors)
+          L.marker(latlng).addTo(sensorMarkers)
         }
       }
+
+      const markerOverlays = {
+        'Snödjupsmätare': sensorMarkers
+      }
+
+      L.control.layers(null, markerOverlays).addTo(newMap)
     }
   },
   methods: {
