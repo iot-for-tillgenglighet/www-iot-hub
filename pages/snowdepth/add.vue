@@ -24,6 +24,7 @@
         >
           Spara
         </v-btn>
+        <v-icon>mdi-crosshairs-gps</v-icon>
       </v-row>
       <v-row>
         <transition name="fade">
@@ -56,8 +57,8 @@
 
 <script>
 import axios from 'axios'
-// import Snowdepth from '../../components/models/snowdepth.model'
-// import MeasurementPosition from '../../components/models/measurementPosition.model'
+import Snowdepth from '../../components/models/snowdepth.model'
+import MeasurementPosition from '../../components/models/measurementPosition.model'
 
 export default {
   data () {
@@ -70,20 +71,26 @@ export default {
       posLon: 0,
       successAlert: false,
       errorAlert: false,
-      isDisabled: true
+      isDisabled: true,
+      image: require('@/static/assets/images/gps_fixed.png')
     }
   },
   mounted () {
     const L = this.$L
     const component = this
     const newMap = L.map('map').setView([62.3908, 17.3069], 13)
+    const locationIcon = L.icon({
+      iconUrl: component.image,
+      iconSize: [38, 38],
+      iconAnchor: [0, 0]
+    })
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 20
     }).addTo(newMap)
 
-    getSensors()
+    // getSensors()
 
     newMap.locate({ setView: true, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
 
@@ -120,10 +127,10 @@ export default {
 
       markers.clearLayers()
 
-      L.marker(e.latlng).addTo(markers)
+      L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
     }
 
-    function getSensors () {
+    /* function getSensors () {
       axios({
         method: 'GET',
         url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}},when,depth,manual}}'
@@ -133,9 +140,9 @@ export default {
           placeSensors(result)
         }
       )
-    }
+    } */
 
-    /* const data = testData()
+    const data = testData()
 
     placeSensors(data)
 
@@ -154,7 +161,7 @@ export default {
       }
 
       return data
-    } */
+    }
 
     function placeSensors (data) {
       sensorMarkers.clearLayers()
