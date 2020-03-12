@@ -46,7 +46,7 @@ export default {
         title: 'Väder',
         flex: 12,
         src: 'https://wi-images.condecdn.net/image/doEYpG6Xd87/crop/2040/f/weather.jpg',
-        to: '/weather'
+        to: '/temperatures'
       },
       {
         title: 'Snödjup',

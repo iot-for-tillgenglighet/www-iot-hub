@@ -68,7 +68,7 @@ export default {
         {
           icon: 'mdi-weather-partly-cloudy',
           title: 'Väder',
-          to: '/weather'
+          to: '/temperatures'
         },
         {
           icon: 'mdi-snowflake',
