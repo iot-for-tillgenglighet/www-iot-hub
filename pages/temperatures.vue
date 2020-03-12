@@ -6,8 +6,6 @@
 
 <script>
 import axios from 'axios'
-// import Temperature from '../components/models/temperature.model'
-// import MeasurementPosition from '../components/models/measurementPosition.model'
 
 export default {
 
