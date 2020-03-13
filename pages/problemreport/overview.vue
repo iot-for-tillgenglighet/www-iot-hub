@@ -54,16 +54,27 @@ export default {
       headers: { 'content-type': 'application/json' }
     })
 
-    const promise2 = axios.get(process.env.baseUrl + '/api/graphql?query={getAll{id,pos{lat,lon},type}}')
-    /* const promise4 = axios({
+    const getAllPromise = axios({
       method: 'POST',
-      url: process.env.baseUrl + '/api/graphql'
+      url: process.env.baseUrl + '/api/graphql',
       data: {
-        query:
-      }
-    }) */
+        query: `
+          query {
+            getAll {
+              id
+              pos {
+                lat
+                lon
+              }
+              type
+            }
+          }
+        `
+      },
+      headers: { 'content-type': 'application/json' }
+    })
 
-    Promise.all([categoriesPromise, promise2]).then(function (response) {
+    Promise.all([categoriesPromise, getAllPromise]).then(function (response) {
       categories = response[0].data.data.getCategories
       response = response[1].data.data.getAll
 
