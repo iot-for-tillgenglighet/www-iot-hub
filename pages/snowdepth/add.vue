@@ -56,6 +56,8 @@
 
 <script>
 import axios from 'axios'
+import Snowdepth from '../../components/models/snowdepth.model'
+import MeasurementPosition from '../../components/models/measurementPosition.model'
 
 export default {
   data () {
@@ -68,25 +70,40 @@ export default {
       posLon: 0,
       successAlert: false,
       errorAlert: false,
-      isDisabled: true
+      isDisabled: true,
+      image: require('@/static/assets/images/gps_fixed.png')
     }
   },
   mounted () {
     const L = this.$L
     const component = this
     const newMap = L.map('map').setView([62.3908, 17.3069], 13)
+    const locationIcon = L.icon({
+      iconUrl: component.image,
+      iconSize: [38, 38],
+      iconAnchor: [0, 0]
+    })
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 20
     }).addTo(newMap)
 
+    const doTest = false
+    const markers = L.layerGroup().addTo(newMap)
+    const sensorMarkers = L.layerGroup().addTo(newMap)
+
+    if (doTest) {
+      const data = testData() // test case
+      placeSensors(data)
+    } else {
+      getSensors()
+    }
+
     newMap.locate({ setView: true, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
 
     newMap.on('locationfound', onLocationFound)
     newMap.on('locationerror', onLocationError)
-
-    const markers = L.layerGroup().addTo(newMap)
 
     function onLocationError () {
       console.log('Could not find location')
@@ -115,7 +132,73 @@ export default {
 
       markers.clearLayers()
 
-      L.marker(e.latlng).addTo(markers)
+      L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
+    }
+
+    function getSensors () {
+      axios({
+        method: 'POST',
+        url: process.env.baseUrl + '/api/graphql',
+        data: {
+          query: `
+            query {
+              snowdepths {
+                from {
+                  pos {
+                    lat
+                    lon
+                  }
+                }
+              when
+              depth
+              manual
+              }
+            }
+          `
+        },
+        headers: { 'content-type': 'application/json' }
+      }).then(
+        (result) => {
+          placeSensors(result)
+        }
+      )
+    }
+
+    function testData () {
+      const randomnumber = Math.floor(Math.random() * (25 - 1 + 1)) + 1
+
+      const data = {
+        data: {
+          data: {
+            snowdepths: [
+              new Snowdepth(new MeasurementPosition(62.3901, 17.3062), '2020-03-09T10:20:22Z', randomnumber, false),
+              new Snowdepth(new MeasurementPosition(62.3910, 17.3075), '2020-03-09T10:30:22Z', randomnumber, false)
+            ]
+          }
+        }
+      }
+
+      return data
+    }
+
+    function placeSensors (data) {
+      sensorMarkers.clearLayers()
+
+      const results = data.data.data.snowdepths
+
+      for (let i = 0; i < results.length; i++) {
+        const latlng = { lat: results[i].from.pos.lat, lon: results[i].from.pos.lon }
+
+        if (results[i].manual === false) {
+          L.marker(latlng).addTo(sensorMarkers)
+        }
+      }
+
+      const markerOverlays = {
+        'Snödjupsmätare': sensorMarkers
+      }
+
+      L.control.layers(null, markerOverlays).addTo(newMap)
     }
   },
   methods: {
