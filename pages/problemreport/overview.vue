@@ -37,10 +37,44 @@ export default {
       maxZoom: 20
     }).addTo(newmap)
 
-    const promise1 = axios.get(process.env.baseUrl + '/api/graphql?query={getCategories{id,label,reportType}}')
-    const promise2 = axios.get(process.env.baseUrl + '/api/graphql?query={getAll{id,pos{lat,lon},type}}')
+    const categoriesPromise = axios({
+      method: 'POST',
+      url: process.env.baseUrl + '/api/graphql',
+      data: {
+        query: `
+          query {
+            getCategories {
+              id
+              label
+              reportType
+            }
+          }
+        `
+      },
+      headers: { 'content-type': 'application/json' }
+    })
 
-    Promise.all([promise1, promise2]).then(function (response) {
+    const getAllPromise = axios({
+      method: 'POST',
+      url: process.env.baseUrl + '/api/graphql',
+      data: {
+        query: `
+          query {
+            getAll {
+              id
+              pos {
+                lat
+                lon
+              }
+              type
+            }
+          }
+        `
+      },
+      headers: { 'content-type': 'application/json' }
+    })
+
+    Promise.all([categoriesPromise, getAllPromise]).then(function (response) {
       categories = response[0].data.data.getCategories
       response = response[1].data.data.getAll
 
