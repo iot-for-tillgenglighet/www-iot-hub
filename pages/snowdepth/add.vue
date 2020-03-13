@@ -200,7 +200,6 @@ export default {
 
       L.control.layers(null, markerOverlays).addTo(newMap)
     }
-
   },
   methods: {
     sendData () {
