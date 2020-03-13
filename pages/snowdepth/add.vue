@@ -24,7 +24,6 @@
         >
           Spara
         </v-btn>
-        <v-icon>mdi-crosshairs-gps</v-icon>
       </v-row>
       <v-row>
         <transition name="fade">
@@ -90,15 +89,21 @@ export default {
       maxZoom: 20
     }).addTo(newMap)
 
-    // getSensors()
+    const doTest = false
+    const markers = L.layerGroup().addTo(newMap)
+    const sensorMarkers = L.layerGroup().addTo(newMap)
+
+    if (doTest) {
+      const data = testData() // test case
+      placeSensors(data)
+    } else {
+      getSensors()
+    }
 
     newMap.locate({ setView: true, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
 
     newMap.on('locationfound', onLocationFound)
     newMap.on('locationerror', onLocationError)
-
-    const markers = L.layerGroup().addTo(newMap)
-    const sensorMarkers = L.layerGroup().addTo(newMap)
 
     function onLocationError () {
       console.log('Could not find location')
@@ -130,21 +135,34 @@ export default {
       L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
     }
 
-    /* function getSensors () {
+    function getSensors () {
       axios({
-        method: 'GET',
-        url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}},when,depth,manual}}'
+        method: 'POST',
+        url: process.env.baseUrl + '/api/graphql',
+        data: {
+          query: `
+            query {
+              snowdepths {
+                from {
+                  pos {
+                    lat
+                    lon
+                  }
+                }
+              when
+              depth
+              manual
+              }
+            }
+          `
+        },
+        headers: { 'content-type': 'application/json' }
       }).then(
         (result) => {
-          console.log(result)
           placeSensors(result)
         }
       )
-    } */
-
-    const data = testData()
-
-    placeSensors(data)
+    }
 
     function testData () {
       const randomnumber = Math.floor(Math.random() * (25 - 1 + 1)) + 1
@@ -182,6 +200,7 @@ export default {
 
       L.control.layers(null, markerOverlays).addTo(newMap)
     }
+
   },
   methods: {
     sendData () {

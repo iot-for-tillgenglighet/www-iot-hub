@@ -43,8 +43,26 @@ export default {
 
     function fetchData () {
       axios({
-        method: 'GET',
-        url: process.env.baseUrl + '/api/graphql?query={snowdepths{from{pos{lat,lon}},when,depth,manual}}'
+        method: 'POST',
+        url: process.env.baseUrl + '/api/graphql',
+        data: {
+          query: `
+            query {
+              snowdepths {
+                from {
+                  pos {
+                    lat
+                    lon
+                  }
+                }
+                when
+                depth
+                manual
+              }
+            }
+          `
+        },
+        headers: { 'content-type': 'application/json' }
       }).then(
         (result) => {
           placePopups(result)
