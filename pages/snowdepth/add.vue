@@ -100,7 +100,7 @@ export default {
       getSensors()
     }
 
-    newMap.locate({ setView: true, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
+    newMap.locate({ setView: false, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
 
     newMap.on('locationfound', onLocationFound)
     newMap.on('locationerror', onLocationError)
@@ -113,6 +113,10 @@ export default {
       const latitude = e.latlng.lat
       const longitude = e.latlng.lng
 
+      console.log(newMap.getZoom())
+
+      newMap.setView(e.latlng)
+
       component.isDisabled = true
 
       if (longitude < 15.516210 || longitude > 17.975816) {
@@ -124,8 +128,6 @@ export default {
       }
 
       component.isDisabled = false
-
-      component.center = e.latlng
 
       component.posLat = e.latlng.lat
       component.posLon = e.latlng.lng
