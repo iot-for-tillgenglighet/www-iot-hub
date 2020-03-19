@@ -92,6 +92,7 @@ export default {
     const doTest = false
     const markers = L.layerGroup().addTo(newMap)
     const sensorMarkers = L.layerGroup().addTo(newMap)
+    let userInteracted = false
 
     if (doTest) {
       const data = testData() // test case
@@ -101,6 +102,11 @@ export default {
     }
 
     newMap.locate({ setView: false, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
+
+    newMap.on('dragstart', function () {
+      console.log('moving')
+      userInteracted = true
+    })
 
     newMap.on('locationfound', onLocationFound)
     newMap.on('locationerror', onLocationError)
@@ -115,7 +121,9 @@ export default {
 
       console.log(newMap.getZoom())
 
-      newMap.setView(e.latlng)
+      if (userInteracted === false) {
+        newMap.setView(e.latlng)
+      }
 
       component.isDisabled = true
 
@@ -135,6 +143,7 @@ export default {
       markers.clearLayers()
 
       L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
+      console.log('test')
     }
 
     function getSensors () {
