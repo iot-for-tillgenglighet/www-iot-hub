@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <div id="map" class="mx-auto text-center" style="height: 50vh;" />
+    <div id="map" class="mx-auto text-center" style="height: 50vh;">
+      <div id="buttonwrap" class="leaflet-bottom leaflet-center">
+        <input id="centerbtn" type="button" value="Center" class="btnStyle span3" />
+      </div>
+    </div>
     <v-card-text class="mx-auto align-center">
       <v-row>
         <v-subheader>Snödjup i centimeter</v-subheader>
@@ -261,6 +265,17 @@ export default {
 </script>
 
 <style lang="scss">
+  div.buttonwrap {
+    position: relative;
+    bottom: 100px;
+    width: 100%;
+    border: 10px solid red;
+    z-index: 10000;
+    button.centerbtn {
+      position: absolute;
+      color: black;
+    }
+  }
   div.row {
     justify-content: center;
   }
