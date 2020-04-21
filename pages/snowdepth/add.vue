@@ -1,10 +1,6 @@
 <template>
   <v-container>
-    <div id="map" class="mx-auto text-center" style="height: 50vh;">
-      <div id="buttonwrap" class="leaflet-bottom leaflet-center">
-        <input id="centerbtn" type="button" value="Center" class="btnStyle span3" />
-      </div>
-    </div>
+    <div id="map" class="mx-auto text-center" style="height: 50vh;" />
     <v-card-text class="mx-auto align-center">
       <v-row>
         <v-subheader>Snödjup i centimeter</v-subheader>
@@ -108,7 +104,6 @@ export default {
     newMap.locate({ setView: false, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
 
     newMap.on('dragstart', function () {
-      console.log('moving')
       userInteracted = true
     })
 
@@ -147,7 +142,6 @@ export default {
       markers.clearLayers()
 
       L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
-      console.log('test')
     }
 
     function getSensors () {
@@ -215,6 +209,21 @@ export default {
 
       L.control.layers(null, markerOverlays).addTo(newMap)
     }
+
+    var MyControl = L.Control.extend({
+      options: {
+        position: 'bottomright'
+      },
+      onAdd: function (newMap) {
+        // create the control container with a particular class name
+        var container = L.DomUtil.create('div', 'my-custom-control')
+        var icon = L.DomUtil.create('img', '', container)
+        // ... initialize other DOM elements, add listeners, etc.
+        return container
+      }
+    })
+
+    newMap.addControl(new MyControl())
   },
   methods: {
     sendData () {
@@ -265,17 +274,6 @@ export default {
 </script>
 
 <style lang="scss">
-  div.buttonwrap {
-    position: relative;
-    bottom: 100px;
-    width: 100%;
-    border: 10px solid red;
-    z-index: 10000;
-    button.centerbtn {
-      position: absolute;
-      color: black;
-    }
-  }
   div.row {
     justify-content: center;
   }
