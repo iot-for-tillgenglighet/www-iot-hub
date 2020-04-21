@@ -101,7 +101,7 @@ export default {
       getSensors()
     }
 
-    newMap.locate({ setView: false, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
+    newMap.locate({ setView: false, watch: true, enableHighAccuracy: true, timeout: 1000, maximumAge: 10000 })
 
     newMap.on('dragstart', function () {
       userInteracted = true
@@ -110,21 +110,25 @@ export default {
     newMap.on('locationfound', onLocationFound)
     newMap.on('locationerror', onLocationError)
 
-    function onLocationError () {
-      console.log('Could not find location')
+    function onLocationError (e) {
     }
 
     function onLocationFound (e) {
       const latitude = e.latlng.lat
       const longitude = e.latlng.lng
 
-      console.log(newMap.getZoom())
-
       if (userInteracted === false) {
         newMap.setView(e.latlng)
       }
 
       component.isDisabled = true
+
+      component.posLat = e.latlng.lat
+      component.posLon = e.latlng.lng
+
+      markers.clearLayers()
+
+      L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
 
       if (longitude < 15.516210 || longitude > 17.975816) {
         return
@@ -135,13 +139,6 @@ export default {
       }
 
       component.isDisabled = false
-
-      component.posLat = e.latlng.lat
-      component.posLon = e.latlng.lng
-
-      markers.clearLayers()
-
-      L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
     }
 
     function getSensors () {
@@ -214,11 +211,14 @@ export default {
       options: {
         position: 'bottomright'
       },
-      onAdd: function (newMap) {
+      onAdd: function (map) {
         var container = L.DomUtil.create('div', 'my-custom-control')
         var button = L.DomUtil.create('button', '', container).append('test')
         
-        L.DomEvent.on(container, 'click', function(){console.log('hej')}, this)
+        L.DomEvent.on(container, 'click', function(e){
+          userInteracted = false
+          map.fire('locationfound', {latlng: { lat: component.posLat, lng: component.posLon}})
+        })
 
         return container
       }
