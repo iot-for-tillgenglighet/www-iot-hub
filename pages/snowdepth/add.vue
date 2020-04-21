@@ -215,10 +215,11 @@ export default {
         position: 'bottomright'
       },
       onAdd: function (newMap) {
-        // create the control container with a particular class name
         var container = L.DomUtil.create('div', 'my-custom-control')
-        var icon = L.DomUtil.create('img', '', container)
-        // ... initialize other DOM elements, add listeners, etc.
+        var button = L.DomUtil.create('button', '', container).append('test')
+        
+        L.DomEvent.on(container, 'click', function(){console.log('hej')}, this)
+
         return container
       }
     })
