@@ -92,6 +92,7 @@ export default {
     const doTest = false
     const markers = L.layerGroup().addTo(newMap)
     const sensorMarkers = L.layerGroup().addTo(newMap)
+    let userInteracted = false
 
     if (doTest) {
       const data = testData() // test case
@@ -100,20 +101,34 @@ export default {
       getSensors()
     }
 
-    newMap.locate({ setView: true, watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 })
+    newMap.locate({ setView: false, watch: true, enableHighAccuracy: true, timeout: 1000, maximumAge: 10000 })
+
+    newMap.on('dragstart', function () {
+      userInteracted = true
+    })
 
     newMap.on('locationfound', onLocationFound)
     newMap.on('locationerror', onLocationError)
 
-    function onLocationError () {
-      console.log('Could not find location')
+    function onLocationError (e) {
     }
 
     function onLocationFound (e) {
       const latitude = e.latlng.lat
       const longitude = e.latlng.lng
 
+      if (userInteracted === false) {
+        newMap.setView(e.latlng)
+      }
+
       component.isDisabled = true
+
+      component.posLat = e.latlng.lat
+      component.posLon = e.latlng.lng
+
+      markers.clearLayers()
+
+      L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
 
       if (longitude < 15.516210 || longitude > 17.975816) {
         return
@@ -124,15 +139,6 @@ export default {
       }
 
       component.isDisabled = false
-
-      component.center = e.latlng
-
-      component.posLat = e.latlng.lat
-      component.posLon = e.latlng.lng
-
-      markers.clearLayers()
-
-      L.marker(e.latlng, { icon: locationIcon }).addTo(markers)
     }
 
     function getSensors () {
@@ -200,6 +206,26 @@ export default {
 
       L.control.layers(null, markerOverlays).addTo(newMap)
     }
+
+    // extending L.Control to create a container that lies on top of the map. The button is created inside this container.
+    const MyControl = L.Control.extend({
+      options: {
+        position: 'bottomright'
+      },
+      onAdd: function (map) {
+        const container = L.DomUtil.create('div', 'my-custom-control')
+        const button = L.DomUtil.create('button', '', container).append('Center')
+
+        L.DomEvent.on(container, 'click', function (e) {
+          userInteracted = false
+          map.fire('locationfound', { latlng: { lat: component.posLat, lng: component.posLon } })
+        })
+
+        return container
+      }
+    })
+
+    newMap.addControl(new MyControl())
   },
   methods: {
     sendData () {
@@ -256,7 +282,7 @@ export default {
   .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
   }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .fade-enter, .fade-leave-to {
     opacity: 0
   }
 </style>
