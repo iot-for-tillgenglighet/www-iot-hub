@@ -207,17 +207,18 @@ export default {
       L.control.layers(null, markerOverlays).addTo(newMap)
     }
 
-    var MyControl = L.Control.extend({
+    // extending L.Control to create a container that lies on top of the map. The button is created inside this container.
+    const MyControl = L.Control.extend({
       options: {
         position: 'bottomright'
       },
       onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'my-custom-control')
-        var button = L.DomUtil.create('button', '', container).append('test')
-        
-        L.DomEvent.on(container, 'click', function(e){
+        const container = L.DomUtil.create('div', 'my-custom-control')
+        const button = L.DomUtil.create('button', '', container).append('Center')
+
+        L.DomEvent.on(container, 'click', function (e) {
           userInteracted = false
-          map.fire('locationfound', {latlng: { lat: component.posLat, lng: component.posLon}})
+          map.fire('locationfound', { latlng: { lat: component.posLat, lng: component.posLon } })
         })
 
         return container
@@ -281,7 +282,7 @@ export default {
   .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
   }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .fade-enter, .fade-leave-to {
     opacity: 0
   }
 </style>
