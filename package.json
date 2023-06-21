@@ -18,7 +18,7 @@
     "@nuxtjs/pwa": "^3.0.0-0",
     "graphql-tag": "^2.10.1",
     "leaflet": "^1.6.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^3.4.3",
     "nuxt-leaflet": "^0.0.19"
   },
   "devDependencies": {
